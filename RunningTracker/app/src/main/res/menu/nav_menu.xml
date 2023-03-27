@@ -25,6 +25,12 @@
             />
 
         <item
+            android:id="@+id/admin_screen"
+
+            android:title="ADMIN"
+            />
+
+        <item
             android:title=""
             />
 

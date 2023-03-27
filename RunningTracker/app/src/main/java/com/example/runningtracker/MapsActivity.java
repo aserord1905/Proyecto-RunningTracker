@@ -9,7 +9,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,6 +30,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private DrawerLayout drawerLayout;
+    private Button btnGo;
+
+    //Variable booleana para controlar el botón
+    private boolean carreraenCurso=false;
+
+    //Declaración de variables
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +58,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Asignación de las variables
+        btnGo = findViewById(R.id.btn_go);
+
+        //Accion del boton.
+        btnGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CountDownTimer(5000, 1000) {
+                    public void onTick(long segundos) {
+                        //Se visualiza los segundos en el botón, tambien se puede colocar en la pantalla
+                        btnGo.setText(""+segundos / 1000);
+                    }
+
+                    //Cuando termina la cuenta atrás:
+                    public void onFinish() {
+
+                        if (!carreraenCurso){
+                            btnGo.setText("En curso");
+                            carreraenCurso = true;
+                        }else{
+                            btnGo.setText("GO");
+                            carreraenCurso=false;
+                        }
+
+                    }
+                }.start();
+            }
+        });
     }
 
     /**

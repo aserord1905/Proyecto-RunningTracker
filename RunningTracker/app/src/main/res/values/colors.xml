@@ -11,5 +11,7 @@
     <color name="blue_white">#C0EEF2</color>
     <color name="negro">#181823</color>
     <color name="azul">#609EA2</color>
+    <color name="marronPrimario">#332C39</color>
+    <color name="rosaPrimario">#C92C6D</color>
 
 </resources>

@@ -28,14 +28,26 @@
             android:layout_height="56dp"
             android:id="@+id/toolbar"
             android:elevation="4dp"
-            android:background="@color/teal_700"
+            android:background="@color/marronPrimario"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/frament_container"/>
+            android:id="@+id/frament_container">
+
+            <Button
+                android:id="@+id/btn_go"
+                android:layout_width="125dp"
+                android:layout_height="115dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="500dp"
+                android:background="@drawable/btn_round"
+                android:backgroundTint="@color/black"
+                android:text="GO"
+                android:textSize="30dp" />
+        </FrameLayout>
 
 
     </LinearLayout>
