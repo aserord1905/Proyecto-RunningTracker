@@ -36,7 +36,7 @@
 
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tv_cronometro"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -56,7 +56,7 @@
         />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_km"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -76,7 +76,7 @@
         />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_kmh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -96,7 +96,7 @@
         />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tv_kcal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -116,7 +116,7 @@
         />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tv_altitud"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"

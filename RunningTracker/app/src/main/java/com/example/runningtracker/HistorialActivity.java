@@ -2,7 +2,9 @@ package com.example.runningtracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,9 @@ import com.google.android.material.navigation.NavigationView;
 public class HistorialActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
+    private TextView cronometro;
+    private CountDownTimer timer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +35,21 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open_nav,R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        //TextView del cronometro
+        cronometro = findViewById(R.id.tv_cronometro);
+
+        //Obtener el intent del inicio de la actividad
+        Intent intent = getIntent();
+
+        //Verificar si el intent contiene el mensaje para iniciar el cronómetro.
+        if (intent.getBooleanExtra("cronometro",true)){
+            //Inicializar el cronometro
+            inicioCronometro();
+        }
+
+
+
 
     }
 
@@ -57,5 +77,25 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void inicioCronometro(){
+        timer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                //Actualización el textview con el tiempo transcurrido.
+                long seconds = (millisUntilFinished / 1000) % 60;
+                long minutes = (millisUntilFinished / (1000*60)) % 60;
+                long hours = (millisUntilFinished/(1000 * 60 * 60)) % 24;
+
+                String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+                cronometro.setText(timeString);
+            }
+
+            @Override
+            public void onFinish() {
+                //Manejar la finalizacion del cronometro
+            }
+        };
     }
 }
