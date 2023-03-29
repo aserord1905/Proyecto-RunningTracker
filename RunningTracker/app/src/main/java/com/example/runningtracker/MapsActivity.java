@@ -50,6 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Variable booleana para controlar el botón
     private boolean carreraenCurso=false;
 
+    private Location lastLocation;
+    private double distanciaTotal;
     //Declaración de variables
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                new CountDownTimer(5000, 1000) {
+                new CountDownTimer(6000, 1000) {
                     public void onTick(long segundos) {
                         //Se visualiza los segundos en el botón, tambien se puede colocar en la pantalla
                         btnGo.setText(""+segundos / 1000);
@@ -93,21 +95,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onFinish() {
                         if (!carreraenCurso){
                             btnGo.setText("En curso");
+                            Toast.makeText(getApplicationContext(),"COMENZANDO LA CARRERA",Toast.LENGTH_LONG).show();
                             carreraenCurso = true;
+                            //Llamamos al metodo para iniciar el trazado de linea.
+                            empezarATrazarLinea();
+
                         }else{
                             btnGo.setText("GO");
+                            Toast.makeText(getApplicationContext(),"Has finalizado la carrera con exito",Toast.LENGTH_LONG).show();
                             carreraenCurso=false;
+                            //Llamamos al metodo para detener el trazado de linea
+                            detenerTrazadoLinea();
                         }
 
                     }
                 }.start();
 
                 //Crear un intent para iniciar una actividad, cuando reciba el intent comenzara a
-                Intent intent = new Intent(MapsActivity.this, HistorialActivity.class);
+
+                //Intent intent = new Intent(MapsActivity.this, HistorialActivity.class);
 
                 //Agregar mensaje para indicar que se debe iniciar el cronometro
-                intent.putExtra("cronometro", true);
-                startActivity(intent);
+                //intent.putExtra("cronometro", true);
+                //startActivity(intent);
             }
         });
     }
@@ -141,6 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+
         LocationManager locationManager = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -152,10 +163,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Añadimos efectos
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(18).bearing(90).tilt(0).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                //Obtener los kilometros.
+                if (lastLocation!=null){
+                    //Obtencion en kilometros
+                    distanciaTotal += lastLocation.distanceTo(location)/1000;
+                }
+
+                lastLocation = location;
             }
         };
         //Actualizacion de datos y le pasamos el escuchador
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
+
+        //Nose si esta bien
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
     }
 
     @Override
