@@ -11,7 +11,6 @@
 
 
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
@@ -34,18 +33,17 @@
         />
 
 
-
     <TextView
         android:id="@+id/tv_cronometro"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
-        android:text="00:00:00"
-        android:textSize="65dp"
-        android:gravity="center"
-        android:textColor="@color/black"
         android:layout_weight="1"
-        android:padding="16dp"/>
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="00:00:00"
+        android:textColor="@color/black"
+        android:textSize="50dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -61,7 +59,7 @@
         android:layout_height="0dp"
         android:background="@color/white"
         android:text="0km"
-        android:textSize="65dp"
+        android:textSize="50dp"
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="@color/black"
@@ -82,7 +80,7 @@
         android:background="@color/white"
         android:layout_weight="1"
         android:text="0 km/hora"
-        android:textSize="65dp"
+        android:textSize="50dp"
         android:gravity="center"
         android:textColor="@color/black"
         android:padding="16dp"/>
@@ -101,7 +99,7 @@
         android:layout_height="0dp"
         android:background="@color/white"
         android:text="0 kcal"
-        android:textSize="65dp"
+        android:textSize="50dp"
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="@color/black"
@@ -122,7 +120,7 @@
         android:background="@color/white"
         android:layout_weight="1"
         android:text="0 m"
-        android:textSize="65dp"
+        android:textSize="50dp"
         android:gravity="center"
         android:textColor="@color/black"
         android:padding="16dp"/>

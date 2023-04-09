@@ -27,6 +27,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -100,6 +102,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //Llamamos al metodo para iniciar el trazado de linea.
                             empezarATrazarLinea();
 
+                            //Intent para mandar la orden de cronometro a la clase historial
+                            Intent intent = new Intent(MapsActivity.this, HistorialActivity.class);
+                            intent.putExtra("startChronometer", true);
+                            startActivity(intent);
+
                         }else{
                             btnGo.setText("GO");
                             Toast.makeText(getApplicationContext(),"Has finalizado la carrera con exito",Toast.LENGTH_LONG).show();
@@ -134,7 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        BitmapDescriptor puntero = BitmapDescriptorFactory.fromResource(R.drawable.puntero);
         //Asociacion de los escuchadores necesarios.
         mMap.setOnMapClickListener(this);
 
@@ -160,9 +167,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng miUbicacion = new LatLng(location.getLatitude(),location.getLongitude());
                 //Mover la camara a la ubicacion actual
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(miUbicacion));
-                //Añadimos efectos
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(18).bearing(90).tilt(0).build();
+                //Añadimos efectos, añadimos mas zoom
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(20).bearing(90).tilt(0).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
                 //Obtener los kilometros.
                 if (lastLocation!=null){

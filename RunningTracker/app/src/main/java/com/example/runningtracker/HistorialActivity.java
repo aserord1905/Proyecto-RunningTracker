@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.MenuItem;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ import com.google.android.material.navigation.NavigationView;
 public class HistorialActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
-    private TextView cronometro;
+    private TextView tv_cronometro;
     private CountDownTimer timer;
 
     @Override
@@ -37,19 +38,13 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
         toggle.syncState();
 
         //TextView del cronometro
-        cronometro = findViewById(R.id.tv_cronometro);
-
-        //Obtener el intent del inicio de la actividad
-        Intent intent = getIntent();
-
-        //Verificar si el intent contiene el mensaje para iniciar el cronómetro.
-        if (intent.getBooleanExtra("cronometro",true)){
-            //Inicializar el cronometro
-            inicioCronometro();
-        }
+        tv_cronometro = findViewById(R.id.tv_cronometro);
 
 
-
+        //Recibe el intent en una variable booleana para comprobar que se ha iniciado o no el cronometro
+        //boolean startChronometer = getIntent().getBooleanExtra("startChronometer",false);
+        //if (startChronometer){
+        //}
 
     }
 
@@ -89,7 +84,7 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
                 long hours = (millisUntilFinished/(1000 * 60 * 60)) % 24;
 
                 String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-                cronometro.setText(timeString);
+                tv_cronometro.setText(timeString);
             }
 
             @Override
@@ -97,5 +92,6 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
                 //Manejar la finalizacion del cronometro
             }
         };
+        timer.start();
     }
 }
