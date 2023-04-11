@@ -1,73 +1,55 @@
 package com.example.runningtracker.model;
 
 public class Usuario {
-    private int id_usuario;
-    private String nombre_usuario;
-    private String apellidos;
-    private String contrasenia;
-    private double peso; //Expresada en kg (Formato XX,X)
-    private double altura; // Expresada en metros (Y,YY)
-    private String sexo; //Hombre o mujer.
-
-    public Usuario(int id_usuario, String nombre_usuario, String apellidos, String contrasenia, double peso, double altura, String sexo) {
-        this.id_usuario = id_usuario;
-        this.nombre_usuario = nombre_usuario;
-        this.apellidos = apellidos;
-        this.contrasenia = contrasenia;
-        this.peso = peso;
-        this.altura = altura;
-        this.sexo = sexo;
-    }
+    private String id;
+    private String username;
+    private String password;
+    private float peso;
+    private String sexo;
+    private String tipo;
 
     public Usuario() {
     }
 
-    public int getId_usuario() {
-        return id_usuario;
+    public Usuario(String id, String username, String password, float peso, String sexo, String tipo) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.peso = peso;
+        this.sexo = sexo;
+        this.tipo = tipo;
     }
 
-    public void setId_usuario(int id_usuario) {
-        this.id_usuario = id_usuario;
+    public String getId() {
+        return id;
     }
 
-    public String getNombre_usuario() {
-        return nombre_usuario;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setNombre_usuario(String nombre_usuario) {
-        this.nombre_usuario = nombre_usuario;
+    public String getUsername() {
+        return username;
     }
 
-    public String getApellidos() {
-        return apellidos;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public String getPassword() {
+        return password;
     }
 
-    public String getContrasenia() {
-        return contrasenia;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
-
-    public double getPeso() {
+    public float getPeso() {
         return peso;
     }
 
-    public void setPeso(double peso) {
+    public void setPeso(float peso) {
         this.peso = peso;
-    }
-
-    public double getAltura() {
-        return altura;
-    }
-
-    public void setAltura(double altura) {
-        this.altura = altura;
     }
 
     public String getSexo() {
@@ -76,5 +58,13 @@ public class Usuario {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
