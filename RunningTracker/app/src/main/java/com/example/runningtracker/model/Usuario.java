@@ -20,6 +20,14 @@ public class Usuario {
         this.tipo = tipo;
     }
 
+    public Usuario(String username, String password, float peso, String sexo, String tipo) {
+        this.username = username;
+        this.password = password;
+        this.peso = peso;
+        this.sexo = sexo;
+        this.tipo = tipo;
+    }
+
     public String getId() {
         return id;
     }

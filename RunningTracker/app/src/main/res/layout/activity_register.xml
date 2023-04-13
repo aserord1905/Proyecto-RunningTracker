@@ -24,14 +24,14 @@
         />
 
     <EditText
-        android:id="@+id/input_gmail"
+        android:id="@+id/input_sexo"
         android:layout_width="match_parent"
         android:fontFamily="sans-serif-light"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.4"
         android:background="@drawable/edittext_background"
-        android:hint="    Gmail:"
+        android:hint="    Sexo :"
         android:textColor="@color/black"
         android:textSize="30dp" />
 
@@ -43,14 +43,14 @@
         />
 
     <EditText
-        android:id="@+id/phone"
+        android:id="@+id/input_peso"
         android:layout_width="match_parent"
         android:fontFamily="sans-serif-light"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.4"
         android:background="@drawable/edittext_background"
-        android:hint="    Phone:"
+        android:hint="    Peso:"
         android:textColor="@color/black"
         android:textSize="30dp" />
 
@@ -61,7 +61,7 @@
 
         />
     <EditText
-        android:id="@+id/input_usuario"
+        android:id="@+id/input_username"
         android:layout_width="match_parent"
         android:fontFamily="sans-serif-light"
         android:layout_height="0dp"
@@ -80,7 +80,7 @@
         />
 
     <EditText
-        android:id="@+id/input_contrasena"
+        android:id="@+id/input_password"
         android:layout_width="match_parent"
         android:fontFamily="sans-serif-light"
         android:layout_height="0dp"
