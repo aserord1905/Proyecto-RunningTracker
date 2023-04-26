@@ -1,18 +1,18 @@
 package com.example.runningtracker.model;
 
 public class Usuario {
-    private String id;
+    private String id_usuario;
     private String username;
     private String password;
-    private float peso;
+    private String peso;
     private String sexo;
     private String tipo;
 
     public Usuario() {
     }
 
-    public Usuario(String id, String username, String password, float peso, String sexo, String tipo) {
-        this.id = id;
+    public Usuario(String id_usuario, String username, String password, String peso, String sexo, String tipo) {
+        this.id_usuario = id_usuario;
         this.username = username;
         this.password = password;
         this.peso = peso;
@@ -20,7 +20,7 @@ public class Usuario {
         this.tipo = tipo;
     }
 
-    public Usuario(String username, String password, float peso, String sexo, String tipo) {
+    public Usuario(String username, String password, String peso, String sexo, String tipo) {
         this.username = username;
         this.password = password;
         this.peso = peso;
@@ -28,12 +28,21 @@ public class Usuario {
         this.tipo = tipo;
     }
 
-    public String getId() {
-        return id;
+
+    public String getId_usuario() {
+        return id_usuario;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId_usuario(String id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    public String getPeso() {
+        return peso;
+    }
+
+    public void setPeso(String peso) {
+        this.peso = peso;
     }
 
     public String getUsername() {
@@ -52,13 +61,6 @@ public class Usuario {
         this.password = password;
     }
 
-    public float getPeso() {
-        return peso;
-    }
-
-    public void setPeso(float peso) {
-        this.peso = peso;
-    }
 
     public String getSexo() {
         return sexo;

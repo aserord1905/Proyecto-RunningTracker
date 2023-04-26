@@ -87,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                new CountDownTimer(6000, 1000) {
+                new CountDownTimer(5000, 1000) {
                     public void onTick(long segundos) {
                         //Se visualiza los segundos en el botón, tambien se puede colocar en la pantalla
                         btnGo.setText(""+segundos / 1000);
@@ -102,10 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //Llamamos al metodo para iniciar el trazado de linea.
                             empezarATrazarLinea();
 
-                            //Intent para mandar la orden de cronometro a la clase historial
-                            Intent intent = new Intent(MapsActivity.this, HistorialActivity.class);
-                            intent.putExtra("startChronometer", true);
-                            startActivity(intent);
+
 
                         }else{
                             btnGo.setText("GO");

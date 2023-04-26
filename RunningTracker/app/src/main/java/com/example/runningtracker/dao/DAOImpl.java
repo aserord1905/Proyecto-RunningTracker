@@ -1,5 +1,9 @@
 package com.example.runningtracker.dao;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import com.example.runningtracker.RegisterActivity;
 import com.example.runningtracker.conexion.Conexion;
 import com.example.runningtracker.model.Usuario;
 
@@ -10,42 +14,46 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DAOImpl implements DAO{
-    private static Connection connection = null;
+
 
     @Override
     public boolean insertarUsuario(Usuario usuario) throws SQLException {
-        Connection c = null;
+        Connection  c= null;
         boolean valueReturn = false;
-        String sql = "INSERT INTO usuario (username, password, peso, sexo, tipo) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO usuarios VALUES(?,?,?,?,?) WHERE id_usuario = 1";
 
         try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
             c = Conexion.getConnection();
-            // Desactivar el autocommit
             c.setAutoCommit(false);
-            PreparedStatement sqlStatement = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            sqlStatement.setString(1, usuario.getUsername());
-            sqlStatement.setString(2, usuario.getPassword());
-            sqlStatement.setFloat(3, usuario.getPeso());
-            sqlStatement.setString(4, usuario.getSexo());
-            sqlStatement.setString(5, usuario.getTipo());
+            // Desactivar el autocommit
 
-            if (sqlStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = sqlStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    // Obtener el ID autoincremental generado por la base de datos
-                    String idGenerado = generatedKeys.getString(1);
-                    usuario.setId(idGenerado);
-                    valueReturn = true;
+            if (c!=null){
+                Log.d("MSG","Conexion realizada a la base de datos");
+
+                PreparedStatement sqlStatement = c.prepareStatement(sql);
+
+                sqlStatement.setString(1, usuario.getUsername());
+                sqlStatement.setString(2, usuario.getPassword());
+                sqlStatement.setString(3, usuario.getPeso());
+                sqlStatement.setString(4, usuario.getSexo());
+                sqlStatement.setString(5, usuario.getTipo());
+
+                if (sqlStatement.executeUpdate() > 0) {
+                   valueReturn=true;
                 }
-            }
 
-            c.commit();
+                c.commit();
+                c.close();
+            }else
+                Log.d("MSG","No existe conexion con la FUKIN BD");
 
-            //Nose si esto dara error
-            c.close();
         }catch (SQLException e) {
             c.rollback();
-            throw new RuntimeException(e);
+             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return valueReturn;
     }
@@ -63,10 +71,10 @@ public class DAOImpl implements DAO{
             PreparedStatement sqlStatement = c.prepareStatement(sql);
             sqlStatement.setString(1, usuario.getUsername());
             sqlStatement.setString(2, usuario.getPassword());
-            sqlStatement.setFloat(3, usuario.getPeso());
+            sqlStatement.setString(3, usuario.getPeso());
             sqlStatement.setString(4, usuario.getSexo());
             sqlStatement.setString(5, usuario.getTipo());
-            sqlStatement.setString(6, usuario.getId());
+            sqlStatement.setString(6, usuario.getId_usuario());
 
             if (sqlStatement.executeUpdate()>0){
                 valueReturn = true;

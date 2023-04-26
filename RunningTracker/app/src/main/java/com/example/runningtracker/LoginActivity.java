@@ -14,14 +14,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.runningtracker.conexion.Conexion;
 import com.google.android.material.navigation.NavigationView;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private ImageView instagramImage,facebookImage;
-    private Button btn_inicioSesion;
-    private EditText usernameInput, passwordInput;
+    private Button btn_inicioSesion, btnRegistro;
+    private EditText usernameInput, passwordInput, inputRol;
     private String nombreInstagram = "jspeluquero";
+    boolean isValid=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,21 +42,23 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         //Campos de la pantalla de inicio sesion
         usernameInput = findViewById(R.id.input_usuario);
         passwordInput = findViewById(R.id.input_contrasena);
-
-        String username = usernameInput.getText().toString();
-        String password = passwordInput.getText().toString();
-
+        inputRol = findViewById(R.id.input_rol);
 
         //Botones inicio sesion y registro
         btn_inicioSesion = findViewById(R.id.btn_iniciosesion);
+        btnRegistro = findViewById(R.id.btn_registro);
 
         //Boton de inicio sesión
         btn_inicioSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (username.equals("") || password.equals("")){
+                String username = usernameInput.getText().toString();
+                String password = passwordInput.getText().toString();
+                String permiso = inputRol.getText().toString();
+                if (username.equals("") || password.equals("") || permiso.equals("")){
                     Toast.makeText(LoginActivity.this, "Campos vacios", Toast.LENGTH_SHORT).show();
-                }
+                }else
+                    new LoginTask().execute(username, password, permiso);
             }
         });
 
@@ -113,18 +122,56 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         @Override
         protected Boolean doInBackground(String... strings) {
-            return null;
+            String username = strings[0];
+            String password = strings[1];
+            String permiso = strings[2];
+            return checkValue(username, password, permiso);
+
         }
+
+
+        public boolean checkValue(String usu, String cont, String permiso) {
+            String consulta = "SELECT * FROM usuarios";
+
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection connection = Conexion.getConnection();
+                PreparedStatement statement = connection.prepareStatement(consulta);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    String id = resultSet.getString("id_usuario");
+                    String usuario = resultSet.getString("username");
+                    String password = resultSet.getString("password");
+                    String rol = resultSet.getString("tipo");
+                    if (usuario.equals(usu) && password.equals(cont) && rol.equals(permiso)) {
+                        //Toast.makeText(LoginActivity.this, "Usuario correcto", Toast.LENGTH_SHORT).show();
+                        isValid = true;
+                        Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+                        startActivity(i);
+                        //Para de seguir leyendo lineas ya que te devuelve false cnd coinciden
+
+                    }
+                    //Toast.makeText(LoginActivity.this, "Incorrecto", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return isValid;
+        }
+
 
         @Override
         protected void onPostExecute(Boolean res) {
             if(res){
-                Toast.makeText(LoginActivity.this,"Iniciando la interfaz de usuario", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this,"Iniciando la interfaz de mapas", Toast.LENGTH_LONG).show();
             }else {
                 Toast.makeText(LoginActivity.this,"Error de acceso: Usuario o Contraseña incorrectos", Toast.LENGTH_LONG).show();
             }
             super.onPostExecute(res);
         }
-
     }
+
+
+
 }
