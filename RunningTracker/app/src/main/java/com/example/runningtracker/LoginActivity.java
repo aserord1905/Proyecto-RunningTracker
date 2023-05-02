@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private ImageView instagramImage,facebookImage;
     private Button btn_inicioSesion, btnRegistro;
     private EditText usernameInput, passwordInput, inputRol;
-    private String nombreInstagram = "jspeluquero";
+    private String nombreInstagram = "";
     boolean isValid=false;
 
     @Override
@@ -47,6 +47,16 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         //Botones inicio sesion y registro
         btn_inicioSesion = findViewById(R.id.btn_iniciosesion);
         btnRegistro = findViewById(R.id.btn_registro);
+
+        //Boton registro de usuario
+        btnRegistro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         //Boton de inicio sesión
         btn_inicioSesion.setOnClickListener(new View.OnClickListener() {
@@ -101,14 +111,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        /* Intent ir a inicio seseion
-        btn_inicioSesion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                startActivity(intent);
-            }
-        });*/
 
 
     }
@@ -145,13 +147,20 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     String rol = resultSet.getString("tipo");
                     if (usuario.equals(usu) && password.equals(cont) && rol.equals(permiso)) {
                         //Toast.makeText(LoginActivity.this, "Usuario correcto", Toast.LENGTH_SHORT).show();
-                        isValid = true;
-                        Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-                        startActivity(i);
-                        //Para de seguir leyendo lineas ya que te devuelve false cnd coinciden
+
+                        //Verifica si es usuario o administrador
+                        if (permiso.equalsIgnoreCase("Usuario")){
+                            isValid = true;
+                            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+                            startActivity(i);
+                        }else if(permiso.equalsIgnoreCase("Admin")){
+                            isValid = true;
+                            Intent i = new Intent(LoginActivity.this, AdminActivity.class);
+                            startActivity(i);
+                        }
+
 
                     }
-                    //Toast.makeText(LoginActivity.this, "Incorrecto", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (Exception e) {
