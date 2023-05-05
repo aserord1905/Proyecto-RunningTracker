@@ -51,6 +51,7 @@ public class AdminActivity extends AppCompatActivity {
                 .map(usuario -> String.format("%s - %s",usuario.getId_usuario(), usuario.getUsername()))
                 .collect(Collectors.toList());
         //ArrayAdapter<String> adaptador = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, nombres);
+        //Inicializamos el adaptador personalizado
         UserListAdapter adapter = new UserListAdapter(this, (ArrayList<Usuario>) usuarios);
         listView.setAdapter(adapter);
 
@@ -130,7 +131,7 @@ public class AdminActivity extends AppCompatActivity {
             String consulta = "DELETE FROM usuarios WHERE id_usuario=?";
             try (Connection connection = Conexion.getConnection();
                  PreparedStatement statement = connection.prepareStatement(consulta)) {
-
+                //Cogemos el id de usuario
                 statement.setString(1, idUsuario);
                 statement.executeUpdate();
 
@@ -170,6 +171,7 @@ public class AdminActivity extends AppCompatActivity {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             // Inflar la vista personalizada para cada elemento de la ListView
             LayoutInflater inflater = LayoutInflater.from(mContext);
+            //inflater.inflate sirve parta poder crear una vista a partir de un diseño xml, convierte un XML a un objeto View para cada fila.
             View customView = inflater.inflate(R.layout.custom_row_layout, parent, false);
 
             // Obtener los elementos de la vista personalizada
