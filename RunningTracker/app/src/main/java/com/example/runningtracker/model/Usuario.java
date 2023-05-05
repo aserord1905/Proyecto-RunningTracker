@@ -11,6 +11,8 @@ public class Usuario {
     public Usuario() {
     }
 
+
+
     public Usuario(String id_usuario, String username) {
         this.id_usuario = id_usuario;
         this.username = username;
