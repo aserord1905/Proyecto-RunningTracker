@@ -17,16 +17,18 @@ import com.example.runningtracker.dao.DAO;
 import com.example.runningtracker.dao.DAOImpl;
 import com.example.runningtracker.model.Usuario;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
 
 public class RegisterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private EditText sexoInput, pesoInput, usernameInput, passwordInput, rolInput;
-    private Button btn_registro;
+    private Button btn_registro, btn_iniciosesion;
     DAO dao = new DAOImpl();
     boolean valueReturn=false;
     boolean isValid=false;
@@ -42,8 +44,18 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         passwordInput = findViewById(R.id.input_password);
         rolInput = findViewById(R.id.input_rol);
 
-
+        //Botones
         btn_registro = findViewById(R.id.btn_registro);
+        btn_iniciosesion = findViewById(R.id.btn_iniciosesion);
+
+        //Boton inicio sesion de la pantalla register te lleva a la pantalla inicio sesion
+        btn_iniciosesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(i);
+            }
+        });
 
         //Accion para el botón de registrar un nuevo usuario
         btn_registro.setOnClickListener(new View.OnClickListener() {
@@ -54,12 +66,11 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                 String peso = pesoInput.getText().toString();
                 String password = passwordInput.getText().toString();
                 String rol = rolInput.getText().toString();
-                //Llamar al metodo de insercion del usuario.
 
-                if (username.equals("") || password.equals("") || rol.equals("") || sexo.equals("") || peso.equals("")){
-                    Toast.makeText(RegisterActivity.this, "Campos vacios", Toast.LENGTH_SHORT).show();
-                }else
-                    new LoginTask().execute(sexo,peso,username, password,rol);
+                //Llamar al metodo para validar el usuario
+                if(validarUsuario(username, password, rol, sexo, peso)) {
+                    new LoginTask().execute(sexo, peso, username, password, rol);
+                }
             }
         });
 
@@ -121,27 +132,45 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    private void insertarUsuario(){
-        String sexo = sexoInput.getText().toString();
-        String username = usernameInput.getText().toString();
-        String peso = pesoInput.getText().toString();
-        String password = passwordInput.getText().toString();
-        String rol = rolInput.getText().toString();
+    public boolean validarPassword(String password){
+        if (password.length() >= 6) {
+            boolean tieneMayuscula = false;
+            boolean tieneMinuscula = false;
 
-        try {
-            valueReturn = dao.insertarUsuario(new Usuario(username, password, peso, sexo, rol));
-            if (valueReturn){
-                Toast.makeText(this, "Usuario insertado exitosamente", Toast.LENGTH_SHORT).show();
-            }else {
-                // Error en la inserción, mostrar mensaje de error
+            for (int i = 0; i < password.length(); i++) {
+                if (Character.isUpperCase(password.charAt(i))) {
+                    tieneMayuscula = true;
+                } else if (Character.isLowerCase(password.charAt(i))) {
+                    tieneMinuscula = true;
+                }else{
+                    Toast.makeText(this, "La contraseña no tiene o minuscula o mayuscula", Toast.LENGTH_SHORT).show();
+                }
 
+                if (tieneMayuscula && tieneMinuscula) {
+                    // La contraseña cumple con los requisitos mínimos
+                    Toast.makeText(this, "Contraseña valida", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+        // La contraseña no cumple con los requisitos mínimos
+        return false;
     }
 
+    private boolean validarUsuario(String username, String password, String rol, String sexo, String peso) {
+        if (username.equals("") || password.equals("") || rol.equals("") || sexo.equals("") || peso.equals("")) {
+            Toast.makeText(RegisterActivity.this, "Campos vacios", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (!rol.equalsIgnoreCase("Usuario") && !rol.equalsIgnoreCase("Admin")) {
+            Snackbar.make(findViewById(R.id.layoutRegister), "El rol debe ser Usuario o Admin", Snackbar.LENGTH_SHORT).show();
+            return false;
+        } else if (!validarPassword(password)) {
+            Snackbar.make(findViewById(R.id.layoutRegister), "La contraseña debe tener al menos 6 caracteres y contener una mayúscula y una minúscula", Snackbar.LENGTH_SHORT).show();
+            return false;
+        }else if(!sexo.equalsIgnoreCase("mujer") && !sexo.equalsIgnoreCase("hombre")) {
+            Snackbar.make(findViewById(R.id.layoutRegister), "El sexo debe ser hombre o mujer", Snackbar.LENGTH_SHORT).show();
+        }
+        return true;
+    }
 
-}
+    }

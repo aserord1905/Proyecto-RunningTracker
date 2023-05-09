@@ -219,6 +219,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(this,"Visualizando el historial...",Toast.LENGTH_LONG).show();
                 break;
 
+            case R.id.nav_historialCarreras:
+                Intent i_historial_carreras = new Intent(this,HistorialCarrerasActivity.class);
+                startActivity(i_historial_carreras );
+                Toast.makeText(this,"Visualizando el historial de las carreras...",Toast.LENGTH_LONG).show();
+                break;
 
             case R.id.nav_salir:
                 finish();

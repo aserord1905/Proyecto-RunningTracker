@@ -21,10 +21,14 @@
         <item
             android:id="@+id/nav_historial"
             android:icon="@drawable/historial"
-            android:title="HISTORIAL"
+            android:title="DATOS CARRERA"
             />
 
-
+        <item
+            android:id="@+id/nav_historialCarreras"
+            android:icon="@drawable/historial_carreras"
+            android:title="HISTORIAL"
+            />
 
         <item
             android:title=""

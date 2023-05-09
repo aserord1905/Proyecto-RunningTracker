@@ -2,10 +2,7 @@ package com.example.runningtracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.MenuItem;
-import android.widget.Chronometer;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,16 +14,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class HistorialActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
+public class HistorialCarrerasActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawerLayout;
-    private TextView tv_cronometro;
-    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_historial);
+        setContentView(R.layout.activity_historial_carreras);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -36,16 +31,6 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open_nav,R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        //TextView del cronometro
-        tv_cronometro = findViewById(R.id.tv_cronometro);
-
-
-        //Recibe el intent en una variable booleana para comprobar que se ha iniciado o no el cronometro
-        //boolean startChronometer = getIntent().getBooleanExtra("startChronometer",false);
-        //if (startChronometer){
-        //}
-
     }
 
     @Override
@@ -71,6 +56,7 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
                 Toast.makeText(this,"Visualizando el historial de las carreras...",Toast.LENGTH_LONG).show();
                 break;
 
+
             case R.id.nav_salir:
                 finish();
                 break;
@@ -78,26 +64,5 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void inicioCronometro(){
-        timer = new CountDownTimer(Long.MAX_VALUE, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                //Actualización el textview con el tiempo transcurrido.
-                long seconds = (millisUntilFinished / 1000) % 60;
-                long minutes = (millisUntilFinished / (1000*60)) % 60;
-                long hours = (millisUntilFinished/(1000 * 60 * 60)) % 24;
-
-                String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-                tv_cronometro.setText(timeString);
-            }
-
-            @Override
-            public void onFinish() {
-                //Manejar la finalizacion del cronometro
-            }
-        };
-        timer.start();
     }
 }
