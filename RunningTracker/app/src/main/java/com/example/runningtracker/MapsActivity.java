@@ -51,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Polyline polyline;
     //Variable booleana para controlar el botón
     private boolean carreraenCurso=false;
-
+    private String idUsuario;
     private Location lastLocation;
     private double distanciaTotal;
     //Declaración de variables
@@ -124,6 +124,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //startActivity(intent);
             }
         });
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null) {
+            idUsuario = bundle.getString("id_usuario");
+        }
     }
 
     /**
@@ -221,7 +226,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             case R.id.nav_historialCarreras:
                 Intent i_historial_carreras = new Intent(this,HistorialCarrerasActivity.class);
-                startActivity(i_historial_carreras );
+                i_historial_carreras.putExtra("id_usuario",idUsuario);
+                startActivity(i_historial_carreras);
                 Toast.makeText(this,"Visualizando el historial de las carreras...",Toast.LENGTH_LONG).show();
                 break;
 

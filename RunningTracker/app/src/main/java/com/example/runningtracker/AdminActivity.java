@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 public class AdminActivity extends AppCompatActivity {
     private ListView listView;
-    private ArrayList<Usuario> usuarios = new ArrayList<>();
     private List<Usuario> listaUsuarios;
 
     @Override
@@ -50,7 +49,7 @@ public class AdminActivity extends AppCompatActivity {
         List<String> nombres = usuarios.stream()
                 .map(usuario -> String.format("%s - %s",usuario.getId_usuario(), usuario.getUsername()))
                 .collect(Collectors.toList());
-        //ArrayAdapter<String> adaptador = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, nombres);
+
         //Inicializamos el adaptador personalizado
         UserListAdapter adapter = new UserListAdapter(this, (ArrayList<Usuario>) usuarios);
         listView.setAdapter(adapter);

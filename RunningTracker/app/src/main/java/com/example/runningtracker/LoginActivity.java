@@ -120,7 +120,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         return false;
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Boolean> {
+    public class LoginTask extends AsyncTask<String, Void, Boolean> {
+        private String userID = null;
 
         @Override
         protected Boolean doInBackground(String... strings) {
@@ -147,11 +148,14 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     String rol = resultSet.getString("tipo");
                     if (usuario.equals(usu) && password.equals(cont) && rol.equals(permiso)) {
                         //Toast.makeText(LoginActivity.this, "Usuario correcto", Toast.LENGTH_SHORT).show();
-
+                        userID = id;
                         //Verifica si es usuario o administrador
                         if (permiso.equalsIgnoreCase("Usuario")){
                             isValid = true;
                             Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("id_usuario",id);
+                            i.putExtras(bundle);
                             startActivity(i);
                         }else if(permiso.equalsIgnoreCase("Admin")){
                             isValid = true;
@@ -169,11 +173,16 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             return isValid;
         }
 
+        public String getUserID() {
+            return userID;
+        }
+
 
         @Override
         protected void onPostExecute(Boolean res) {
             if(res){
                 Toast.makeText(LoginActivity.this,"Iniciando la interfaz de mapas", Toast.LENGTH_LONG).show();
+
             }else {
                 Toast.makeText(LoginActivity.this,"Error de acceso: Usuario o Contraseña incorrectos", Toast.LENGTH_LONG).show();
             }

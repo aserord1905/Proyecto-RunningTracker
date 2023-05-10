@@ -8,31 +8,22 @@ public class Entrenamiento {
 
     private String id_usuario;
 
-    private Date fecha;
+    private String distancia;
 
-    private float distancia;
+    private String velocidad_media;
 
-    private Time tiempo;
+    private String calorias_quemadas;
 
-    private float velocidad_media;
-
-    private int calorias_quemadas;
-
-    //Coonstructor por defecto
     public Entrenamiento() {
-
     }
 
-    public Entrenamiento(String id_entrenamientos, String id_usuario, Date fecha, float distancia, Time tiempo, float velocidad_media, int calorias_quemadas) {
+    public Entrenamiento(String id_entrenamientos, String id_usuario, String distancia, String velocidad_media, String calorias_quemadas) {
         this.id_entrenamientos = id_entrenamientos;
         this.id_usuario = id_usuario;
-        this.fecha = fecha;
         this.distancia = distancia;
-        this.tiempo = tiempo;
         this.velocidad_media = velocidad_media;
         this.calorias_quemadas = calorias_quemadas;
     }
-
 
     public String getId_entrenamientos() {
         return id_entrenamientos;
@@ -50,43 +41,38 @@ public class Entrenamiento {
         this.id_usuario = id_usuario;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public float getDistancia() {
+    public String getDistancia() {
         return distancia;
     }
 
-    public void setDistancia(float distancia) {
+    public void setDistancia(String distancia) {
         this.distancia = distancia;
     }
 
-    public Time getTiempo() {
-        return tiempo;
-    }
-
-    public void setTiempo(Time tiempo) {
-        this.tiempo = tiempo;
-    }
-
-    public float getVelocidad_media() {
+    public String getVelocidad_media() {
         return velocidad_media;
     }
 
-    public void setVelocidad_media(float velocidad_media) {
+    public void setVelocidad_media(String velocidad_media) {
         this.velocidad_media = velocidad_media;
     }
 
-    public int getCalorias_quemadas() {
+    public String getCalorias_quemadas() {
         return calorias_quemadas;
     }
 
-    public void setCalorias_quemadas(int calorias_quemadas) {
+    public void setCalorias_quemadas(String calorias_quemadas) {
         this.calorias_quemadas = calorias_quemadas;
+    }
+
+    @Override
+    public String toString() {
+        return "Entrenamiento{" +
+                "id_entrenamientos='" + id_entrenamientos + '\'' +
+                ", id_usuario='" + id_usuario + '\'' +
+                ", distancia='" + distancia + '\'' +
+                ", velocidad_media='" + velocidad_media + '\'' +
+                ", calorias_quemadas='" + calorias_quemadas + '\'' +
+                '}';
     }
 }
