@@ -1,9 +1,8 @@
 package com.example.runningtracker;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,8 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -43,14 +43,16 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
     private ListView listView;
     private List<Entrenamiento> listaEntrenamientos;
     private String idUsuario;
+    private Usuario u;
+    private Button limpiarHistorial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial_carreras);
         listView = findViewById(R.id.listview);
-        listaEntrenamientos=new ArrayList<>();
-       /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -58,24 +60,22 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open_nav,R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();*/
+        toggle.syncState();
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle!=null) {
-            idUsuario = bundle.getString("id_usuario");
-        }
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        idUsuario = sharedPreferences.getString("id_usuario", null);
+
+        u=new Usuario();
+        u.setId_usuario(idUsuario);
+        listaEntrenamientos = new ArrayList<>();
 
         LoadDataTask task = new LoadDataTask();
         task.execute();
     }
 
     public void addItemsInListView(List<Entrenamiento> entrenamientos) {
-        List<String> nombres = entrenamientos.stream()
-                .map(entrenamiento -> String.format("%s - %s",entrenamiento,entrenamiento.getId_entrenamientos()))
-                .collect(Collectors.toList());
-
         //Inicializamos el adaptador personalizado
-       UserListAdapter adapter = new UserListAdapter(this, (ArrayList<Entrenamiento>) entrenamientos);
+       UserListAdapter adapter = new UserListAdapter(this, (ArrayList<Entrenamiento>) entrenamientos,idUsuario);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -131,7 +131,7 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
             try {
                 Connection connection = Conexion.getConnection();
                 PreparedStatement statement = connection.prepareStatement(consulta);
-                statement.setString(1, idUsuario);
+                statement.setString(1, u.getId_usuario());
                 ResultSet resultSet = statement.executeQuery();
 
                 // Recorrer los resultados de la consulta y crear objetos de entrenamiento
@@ -165,13 +165,14 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
         private final Context mContext;
         // Lista de usuarios a mostrar en la ListView
         private final ArrayList<Entrenamiento> mEntrenamientos;
+        // ID del usuario
+        private final String mIdUsuario;
 
-        public UserListAdapter(Context context, ArrayList<Entrenamiento> entrenamientos) {
-            // Constructor que llama al constructor de la clase padre
+        public UserListAdapter(Context context, ArrayList<Entrenamiento> entrenamientos, String idUsuario) {
             super(context, R.layout.custom_row_layout, entrenamientos);
-            // Asignar los parámetros a las variables de instancia correspondientes
             this.mContext = context;
             this.mEntrenamientos = entrenamientos;
+            this.mIdUsuario = idUsuario;
         }
 
         // Método que se llama para crear la vista de cada elemento de la ListView
@@ -189,11 +190,12 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
 
             // Establecer el icono y el nombre del usuario en la vista personalizada
             Entrenamiento currentEntrenamiento = mEntrenamientos.get(position);
-            userIcon.setImageResource(R.drawable.user_icon);
-            userName.setText(currentEntrenamiento.getId_entrenamientos());
+            userIcon.setImageResource(R.drawable.historial_carreras);
+            userName.setText("Entrenamiento: "+currentEntrenamiento.getId_entrenamientos()+"\nCalorias: "+currentEntrenamiento.getCalorias_quemadas()+"kcal     " +
+                    "Distancia:"+currentEntrenamiento.getDistancia()+" km\nVelocidad Media: "+currentEntrenamiento.getVelocidad_media()+"m/s");
 
             // Establecer otros atributos de la vista personalizada, si es necesario
-            customView.setBackgroundColor(Color.WHITE);
+
 
             // Devolver la vista personalizada
             return customView;

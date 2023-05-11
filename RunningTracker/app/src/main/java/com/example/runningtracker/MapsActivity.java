@@ -129,6 +129,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(bundle!=null) {
             idUsuario = bundle.getString("id_usuario");
         }
+
+
     }
 
     /**
@@ -211,13 +213,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_carrera:
+                Bundle bundle = new Bundle();
+                bundle.putString("id_usuario", idUsuario);
                 Intent i_mapa = new Intent(this,MapsActivity.class);
                 startActivity(i_mapa);
                 //Bundle que te lleve a la pagina de los mapas
                 Toast.makeText(this,"Iniciando Mapas...",Toast.LENGTH_LONG).show();
+
                 break;
 
             case R.id.nav_historial:
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("id_usuario", idUsuario);
                 //Bundle que te lleve a la pagina de las listas
                 Intent i_historial = new Intent(this,HistorialActivity.class);
                 startActivity(i_historial);
@@ -225,6 +232,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
 
             case R.id.nav_historialCarreras:
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("id_usuario", idUsuario);
                 Intent i_historial_carreras = new Intent(this,HistorialCarrerasActivity.class);
                 i_historial_carreras.putExtra("id_usuario",idUsuario);
                 startActivity(i_historial_carreras);

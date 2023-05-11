@@ -3,7 +3,9 @@ package com.example.runningtracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -147,15 +149,19 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     String password = resultSet.getString("password");
                     String rol = resultSet.getString("tipo");
                     if (usuario.equals(usu) && password.equals(cont) && rol.equals(permiso)) {
-                        //Toast.makeText(LoginActivity.this, "Usuario correcto", Toast.LENGTH_SHORT).show();
-                        userID = id;
+
                         //Verifica si es usuario o administrador
                         if (permiso.equalsIgnoreCase("Usuario")){
                             isValid = true;
+                            //Utilizacion del SharedPreferences para poder obtener el id del usuario y no perderlo al pasar entre paginas
+                            //Esto crea o recupera un archivo de preferencias llamado "MyPrefs".
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                            //Este objeto se utiliza para realizar modificaciones en las preferencias almacenadas.
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            //Se almacena el id del usuario
+                            editor.putString("id_usuario", id);
+                            editor.apply();
                             Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("id_usuario",id);
-                            i.putExtras(bundle);
                             startActivity(i);
                         }else if(permiso.equalsIgnoreCase("Admin")){
                             isValid = true;

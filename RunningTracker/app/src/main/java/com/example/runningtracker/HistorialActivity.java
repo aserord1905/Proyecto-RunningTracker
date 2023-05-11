@@ -22,7 +22,7 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private TextView tv_cronometro;
     private CountDownTimer timer;
-
+    private String idUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +40,10 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
         //TextView del cronometro
         tv_cronometro = findViewById(R.id.tv_cronometro);
 
-
-        //Recibe el intent en una variable booleana para comprobar que se ha iniciado o no el cronometro
-        //boolean startChronometer = getIntent().getBooleanExtra("startChronometer",false);
-        //if (startChronometer){
-        //}
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null) {
+            idUsuario = bundle.getString("id_usuario");
+        }
 
     }
 
@@ -52,6 +51,8 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_carrera:
+                Bundle bundle = new Bundle();
+                bundle.putString("id_usuario", idUsuario);
                 Intent i_mapa = new Intent(this,MapsActivity.class);
                 startActivity(i_mapa);
                 //Bundle que te lleve a la pagina de los mapas
@@ -59,6 +60,8 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
                 break;
 
             case R.id.nav_historial:
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("id_usuario", idUsuario);
                 //Bundle que te lleve a la pagina de las listas
                 Intent i_historial = new Intent(this,HistorialActivity.class);
                 startActivity(i_historial);
@@ -66,6 +69,8 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
                 break;
 
             case R.id.nav_historialCarreras:
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("id_usuario", idUsuario);
                 Intent i_historial_carreras = new Intent(this,HistorialCarrerasActivity.class);
                 startActivity(i_historial_carreras );
                 Toast.makeText(this,"Visualizando el historial de las carreras...",Toast.LENGTH_LONG).show();
