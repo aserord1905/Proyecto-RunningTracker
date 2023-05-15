@@ -39,6 +39,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/btn_limpiar_historial"
             android:layout_width="500px"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

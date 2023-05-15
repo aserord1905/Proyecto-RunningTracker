@@ -64,6 +64,8 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
 
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         idUsuario = sharedPreferences.getString("id_usuario", null);
+        //Declarar boton en la lista
+        limpiarHistorial = findViewById(R.id.btn_limpiar_historial);
 
         u=new Usuario();
         u.setId_usuario(idUsuario);
@@ -71,7 +73,17 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
 
         LoadDataTask task = new LoadDataTask();
         task.execute();
+
+        limpiarHistorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteHistorialTask taskDelete= new DeleteHistorialTask();
+                taskDelete.execute();
+            }
+        });
+
     }
+
 
     public void addItemsInListView(List<Entrenamiento> entrenamientos) {
         //Inicializamos el adaptador personalizado
@@ -156,9 +168,37 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
         protected void onPostExecute(List<Entrenamiento> entrenamientos) {
             addItemsInListView(entrenamientos);
         }
-
-
     }
+
+    private class DeleteHistorialTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            String consulta = "DELETE FROM entrenamientos WHERE id_usuario=?";
+            try (Connection connection = Conexion.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(consulta)) {
+                //Cogemos el id de usuario
+                statement.setString(1, u.getId_usuario());
+                statement.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            // Actualizar la lista de usuarios después de eliminar el usuario
+            listaEntrenamientos.clear();
+            //Actualizar la tabla
+            LoadDataTask task = new LoadDataTask();
+            task.execute();
+        }
+    }
+
+
     //Adaptador personalizado con una foto
     public class UserListAdapter extends ArrayAdapter<Entrenamiento> {
         // Contexto de la aplicación
@@ -201,4 +241,7 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
             return customView;
         }
     }
+
+
+
 }
