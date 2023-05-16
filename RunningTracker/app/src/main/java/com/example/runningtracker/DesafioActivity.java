@@ -32,19 +32,6 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
             descripcionSegundoDesafio,descripcionTercerDesafio;
 
     private List<Desafios> listaDesafios;
-
-    private static final String titPrimerDesafio = "DESAFIO PRINCIPIANTE";
-    private static final String titSegundoDesafio = "";
-    private static final String titTercerDesafio = "";
-
-    private static final String fechPrimerDesafio = "DESAFIO INTERMEDIO";
-    private static final String fechSegundoDesafio = "";
-    private static final String fechTercerDesafio = "";
-
-    private static final String descPrimerDesafio = "DESAFIO AVANZADO";
-    private static final String descSegundoDesafio = "";
-    private static final String descTercerDesafio = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +68,6 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         obtenerDesafiosTask.execute();
     }
 
-    public void cambioNombre(){
-
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:background="@color/marronPrimario"
+        android:background="#609EA2"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="4dp"
-            android:background="#609EA2"
+            android:background="#332C39"
 
             />
     <androidx.cardview.widget.CardView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_weight="1"
-        android:backgroundTint="#609EA2"
+        android:backgroundTint="#332C39"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
@@ -42,14 +42,14 @@
             <TextView
                 android:id="@+id/titulo1"
                 android:layout_width="match_parent"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:text="Información del rectángulo 1"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/fecha1"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
@@ -58,7 +58,7 @@
 
             <TextView
                 android:id="@+id/descripcion1"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -69,6 +69,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/btn_inscribirPrimerDesafio"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_gravity="bottom|right"
@@ -82,7 +83,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="370dp"
-        android:backgroundTint="#609EA2"
+        android:backgroundTint="#332C39"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_weight="1"
@@ -99,13 +100,13 @@
                 android:id="@+id/titulo2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="Información del rectángulo 1"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/fecha2"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -116,13 +117,14 @@
                 android:id="@+id/descripcion2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_marginTop="8dp"
                 android:text="Información del rectángulo 3"
                 android:textSize="14sp" />
 
         </LinearLayout>
         <Button
+            android:id="@+id/btn_inscribirSegundoDesafio"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_gravity="bottom|right"
@@ -137,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_weight="1"
-        android:backgroundTint="#609EA2"
+        android:backgroundTint="#332C39"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
@@ -149,7 +151,7 @@
 
             <TextView
                 android:id="@+id/titulo3"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Información del rectángulo 1"
@@ -160,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="Información del rectángulo 2"
                 android:textSize="18sp" />
 
@@ -169,12 +171,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="Información del rectángulo 3"
                 android:textSize="14sp" />
 
         </LinearLayout>
         <Button
+            android:id="@+id/btn_inscribirTercerDesafio"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_gravity="bottom|right"
