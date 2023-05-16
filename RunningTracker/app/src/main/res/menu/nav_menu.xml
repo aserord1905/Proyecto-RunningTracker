@@ -31,8 +31,12 @@
             />
 
         <item
-            android:title=""
+            android:id="@+id/nav_desafio"
+            android:icon="@drawable/desafio"
+            android:title="DESAFIOS"
             />
+
+
 
         <item
             android:id="@+id/nav_salir"

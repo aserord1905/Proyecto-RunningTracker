@@ -76,6 +76,12 @@ public class HistorialActivity extends AppCompatActivity implements NavigationVi
                 Toast.makeText(this,"Visualizando el historial de las carreras...",Toast.LENGTH_LONG).show();
                 break;
 
+            case R.id.nav_desafio:
+                Intent i_desafio = new Intent(this,DesafioActivity.class);
+                startActivity(i_desafio);
+                Toast.makeText(this,"Visualizando los desafios de este mes",Toast.LENGTH_LONG).show();
+                break;
+
             case R.id.nav_salir:
                 finish();
                 break;
