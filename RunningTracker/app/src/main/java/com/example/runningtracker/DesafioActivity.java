@@ -1,9 +1,13 @@
 package com.example.runningtracker;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +20,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.runningtracker.conexion.Conexion;
 import com.example.runningtracker.model.Desafios;
+import com.example.runningtracker.model.Historial;
+import com.example.runningtracker.model.Usuario;
 import com.google.android.material.navigation.NavigationView;
 
 import java.sql.Connection;
@@ -30,7 +36,11 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
     private TextView tituloPrimerDesafio,tituloSegundoDesafio,tituloTercerDesafio,
             kmsPrimerDesafio, kmsSegundoDesafio, kmsTercerDesafio,descripcionPrimerDesafio,
             descripcionSegundoDesafio,descripcionTercerDesafio;
-
+    private Button primerDesafio_btn,segundoDesafio_btn,tercerDesafio_btn;
+    private String idUsuario;
+    private Usuario u;
+    private Desafios d;
+    private Historial h;
     private List<Desafios> listaDesafios;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,11 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        idUsuario = sharedPreferences.getString("id_usuario", null);
+        d=new Desafios();
+        u=new Usuario();
+        u.setId_usuario(idUsuario);
         //Asociar ids de titulos de los desafios
         tituloPrimerDesafio = findViewById(R.id.titulo1);
         tituloSegundoDesafio = findViewById(R.id.titulo2);
@@ -61,6 +76,43 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         descripcionPrimerDesafio = findViewById(R.id.descripcion1);
         descripcionSegundoDesafio = findViewById(R.id.descripcion2);
         descripcionTercerDesafio = findViewById(R.id.descripcion3);
+
+        //Asociar ids botones interfaz
+        primerDesafio_btn = findViewById(R.id.btn_inscribirPrimerDesafio);
+        segundoDesafio_btn = findViewById(R.id.btn_inscribirSegundoDesafio);
+        tercerDesafio_btn = findViewById(R.id.btn_inscribirTercerDesafio);
+
+        //PRIMER BOTON
+        primerDesafio_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Acciones a realizar cuando se hace clic en el primer botón
+                d.setId_desafio("1");
+                new InscribirDesafio().execute(u.getId_usuario(),d.getId_desafio(),"1");
+            }
+        });
+
+        segundoDesafio_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Acciones a realizar cuando se hace clic en el segundo botón
+                int id_Desafio = 2;
+                d.setId_desafio(String.valueOf(id_Desafio));
+                new InscribirDesafio().execute(u.getId_usuario(),d.getId_desafio(),"1");
+            }
+        });
+
+        tercerDesafio_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Acciones a realizar cuando se hace clic en el tercer botón
+                int id_Desafio = 3;
+                d.setId_desafio(String.valueOf(id_Desafio));
+                new InscribirDesafio().execute(u.getId_usuario(),d.getId_desafio(),"1");
+            }
+        });
+
+
 
         listaDesafios = new ArrayList<>();
 
@@ -150,5 +202,53 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         }
     }
 
+    private class InscribirDesafio extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            //Pasar id del usuario, id del desafio, kilometros realizados
+            String idUsuario = strings[0];
+            String idDesafio = strings[1];
+            String kilometros_realizados = strings[2];
+           return insertValue(idUsuario,idDesafio,kilometros_realizados);
+        }
+
+        public boolean insertValue(String idUsuario, String idDesafio,String kilometros_realizados) {
+
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection connection = Conexion.getConnection();
+
+
+
+                String query = "SELECT MAX(id_historial) FROM historial_desafios";
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery(query);
+                String lastIdStr = rs.next() ? rs.getString(1) : "0"; // Si la tabla está vacía, se asigna el valor 0 por defecto
+
+
+                // Verificar si la cadena es nula y establecer un valor predeterminado
+                int newId = 0;
+                if (lastIdStr != null) {
+                    newId = Integer.parseInt(lastIdStr) + 1;
+                }
+                String consulta = "INSERT INTO historial_desafios (id_historial, id_usuario, id_desafio, kilometros_realizados)  VALUES ('"+newId+"','" + idUsuario + "', '" + idDesafio + "', '" + kilometros_realizados +"')";
+                PreparedStatement statement = connection.prepareStatement(consulta);
+                int rowsInserted = statement.executeUpdate();
+                return rowsInserted > 0;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean res) {
+            super.onPostExecute(res);
+        }
+    }
+    //Para apuntarnos a un desafio es necesario insertar en la tabla historial_desafio
 
 }

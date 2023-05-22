@@ -136,26 +136,33 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         if (password.length() >= 6) {
             boolean tieneMayuscula = false;
             boolean tieneMinuscula = false;
+            boolean tieneNumero = false;
 
             for (int i = 0; i < password.length(); i++) {
                 if (Character.isUpperCase(password.charAt(i))) {
                     tieneMayuscula = true;
                 } else if (Character.isLowerCase(password.charAt(i))) {
                     tieneMinuscula = true;
-                }else{
-                    Toast.makeText(this, "La contraseña no tiene o minuscula o mayuscula", Toast.LENGTH_SHORT).show();
+                } else if (Character.isDigit(password.charAt(i))) {
+                    tieneNumero = true;
+                } else {
+                    Toast.makeText(this, "La contraseña no contiene una mayúscula, una minúscula y un número", Toast.LENGTH_SHORT).show();
+                    return false;
                 }
 
-                if (tieneMayuscula && tieneMinuscula) {
+                if (tieneMayuscula && tieneMinuscula && tieneNumero) {
                     // La contraseña cumple con los requisitos mínimos
-                    Toast.makeText(this, "Contraseña valida", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Contraseña válida", Toast.LENGTH_SHORT).show();
                     return true;
                 }
             }
         }
+
         // La contraseña no cumple con los requisitos mínimos
+        Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres y contener una mayúscula, una minúscula y un número", Toast.LENGTH_SHORT).show();
         return false;
     }
+
 
     private boolean validarUsuario(String username, String password, String rol, String sexo, String peso) {
         if (username.equals("") || password.equals("") || rol.equals("") || sexo.equals("") || peso.equals("")) {

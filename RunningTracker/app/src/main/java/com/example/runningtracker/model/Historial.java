@@ -7,12 +7,12 @@ public class Historial {
 
     private String id_usuarios;
 
-    private float kilometros_realizados;
+    private String kilometros_realizados;
 
     public Historial() {
     }
 
-    public Historial(String id_historial, String id_desafios, String id_usuarios, float kilometros_realizados) {
+    public Historial(String id_historial, String id_desafios, String id_usuarios, String kilometros_realizados) {
         this.id_historial = id_historial;
         this.id_desafios = id_desafios;
         this.id_usuarios = id_usuarios;
@@ -43,11 +43,12 @@ public class Historial {
         this.id_usuarios = id_usuarios;
     }
 
-    public float getKilometros_realizados() {
+    public String getKilometros_realizados() {
         return kilometros_realizados;
     }
 
-    public void setKilometros_realizados(float kilometros_realizados) {
+    public void setKilometros_realizados(String kilometros_realizados) {
         this.kilometros_realizados = kilometros_realizados;
     }
 }
+
