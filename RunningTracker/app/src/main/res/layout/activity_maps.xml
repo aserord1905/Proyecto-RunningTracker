@@ -19,6 +19,7 @@
         tools:context=".MapsActivity" />
     <TextView
         android:id="@+id/tv_cronometro"
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
@@ -48,12 +49,13 @@
 
             <Button
                 android:id="@+id/btn_go"
+                android:fontFamily="sans-serif-light"
                 android:layout_width="125dp"
                 android:layout_height="115dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="500dp"
                 android:background="@drawable/btn_round"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/marronPrimario"
                 android:textColor="@color/white"
                 android:text="GO"
                 android:textSize="30dp" />

@@ -158,7 +158,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int segundos = (int) (tiempo - horas * 3600000 - minutos * 60000) / 1000;
 
         String tiempoFormateado = String.format("%02d:%02d:%02d", horas, minutos, segundos);
-        cronometroTextView.setText("Tiempo en carrera:\n"+tiempoFormateado+"\nDistancia: "+distanciaTotal+" km");
+        String distanciaFormateada = String.format("%.2f", distanciaTotal);
+        cronometroTextView.setText("Tiempo en carrera:\n"+tiempoFormateado+"\nDistancia: "+distanciaFormateada+" km");
     }
 
     private void detenerCronometro() {

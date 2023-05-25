@@ -39,7 +39,7 @@
         android:background="@drawable/edittext_background"
         android:hint="Username:"
         android:textColor="@color/black"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:textSize="30dp" />
 
     <TextView
@@ -61,7 +61,7 @@
         android:background="@drawable/edittext_background"
         android:textColorHint="@color/black"
         android:hint="Contraseña:"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:inputType="textPassword"
         android:textSize="30dp" />
 
