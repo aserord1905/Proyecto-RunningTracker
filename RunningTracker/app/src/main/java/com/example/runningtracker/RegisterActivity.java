@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,8 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
     DAO dao = new DAOImpl();
     boolean valueReturn=false;
     boolean isValid=false;
+    private RadioButton radioUsuario, radioAdmin;
+    private String rol = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +45,29 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         pesoInput = findViewById(R.id.input_peso);
         usernameInput = findViewById(R.id.input_username);
         passwordInput = findViewById(R.id.input_password);
-        rolInput = findViewById(R.id.input_rol);
+        // Referenciar los elementos
+        radioUsuario = findViewById(R.id.radio_usuario);
+        radioAdmin = findViewById(R.id.radio_admin);
 
         //Botones
         btn_registro = findViewById(R.id.btn_registro);
         btn_iniciosesion = findViewById(R.id.btn_iniciosesion);
+        radioUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Establecer el valor de rol como "usuario"
+                rol = "usuario";
+            }
+        });
+
+        radioAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Establecer el valor de rol como "admin"
+                rol = "admin";
+            }
+        });
+
 
         //Boton inicio sesion de la pantalla register te lleva a la pantalla inicio sesion
         btn_iniciosesion.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +86,12 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                 String username = usernameInput.getText().toString();
                 String peso = pesoInput.getText().toString();
                 String password = passwordInput.getText().toString();
-                String rol = rolInput.getText().toString();
+
+                // Validar que se haya seleccionado un rol
+                if (rol.isEmpty()) {
+                    Snackbar.make(findViewById(R.id.layoutRegister), "Por favor, selecciona un rol", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
 
                 //Llamar al metodo para validar el usuario
                 if(validarUsuario(username, password, rol, sexo, peso)) {
@@ -156,10 +182,10 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                     return true;
                 }
             }
-        }
-
+        }else
+            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres y contener una mayúscula, una minúscula y un número", Toast.LENGTH_SHORT).show();
         // La contraseña no cumple con los requisitos mínimos
-        Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres y contener una mayúscula, una minúscula y un número", Toast.LENGTH_SHORT).show();
+
         return false;
     }
 

@@ -17,7 +17,16 @@
         android:layout_height="match_parent"
         map:uiZoomControls="true"
         tools:context=".MapsActivity" />
-
+    <TextView
+        android:id="@+id/tv_cronometro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:padding="16dp"
+        android:layout_marginBottom="1500px"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

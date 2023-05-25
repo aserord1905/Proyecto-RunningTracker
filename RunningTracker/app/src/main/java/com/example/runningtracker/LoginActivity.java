@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.runningtracker.conexion.Conexion;
@@ -30,7 +31,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private EditText usernameInput, passwordInput, inputRol;
     private String nombreInstagram = "";
     boolean isValid=false;
-
+    private RadioButton radioUsuario, radioAdmin;
+    private String rol = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +46,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         //Campos de la pantalla de inicio sesion
         usernameInput = findViewById(R.id.input_usuario);
         passwordInput = findViewById(R.id.input_contrasena);
-        inputRol = findViewById(R.id.input_rol);
 
+// Referenciar los elementos
+        radioUsuario = findViewById(R.id.radio_usuario);
+        radioAdmin = findViewById(R.id.radio_admin);
         //Botones inicio sesion y registro
         btn_inicioSesion = findViewById(R.id.btn_iniciosesion);
         btnRegistro = findViewById(R.id.btn_registro);
@@ -59,18 +63,32 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
+        radioUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Establecer el valor de rol como "usuario"
+                rol = "usuario";
+            }
+        });
 
+        radioAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Establecer el valor de rol como "admin"
+                rol = "admin";
+            }
+        });
         //Boton de inicio sesión
         btn_inicioSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String username = usernameInput.getText().toString();
                 String password = passwordInput.getText().toString();
-                String permiso = inputRol.getText().toString();
-                if (username.equals("") || password.equals("") || permiso.equals("")){
+
+                if (username.equals("") || password.equals("") || rol.equals("")){
                     Toast.makeText(LoginActivity.this, "Campos vacios", Toast.LENGTH_SHORT).show();
                 }else
-                    new LoginTask().execute(username, password, permiso);
+                    new LoginTask().execute(username, password, rol);
             }
         });
 

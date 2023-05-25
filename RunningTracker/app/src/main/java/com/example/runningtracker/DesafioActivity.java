@@ -45,6 +45,7 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
     private List<Desafios> listaDesafios;
     private String idDesafio;
 
+    /**TABLA BD HISTORIAL_DESAFIOS**/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +96,6 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
                 if (primerDesafio_btn.getText().toString().equals("Inscribir")) {
                     new InscribirDesafio().execute(u.getId_usuario(), d.getId_desafio(), null);
                 } else {
-                    new EliminarDesafio().execute(u.getId_usuario(), d.getId_desafio());
                     Toast.makeText(DesafioActivity.this, "Desafio completado", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -110,7 +110,6 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
                 if (segundoDesafio_btn.getText().toString().equals("Inscribir")) {
                     new InscribirDesafio().execute(u.getId_usuario(), d.getId_desafio(), null);
                 } else {
-                    new EliminarDesafio().execute(u.getId_usuario(), d.getId_desafio());
                     Toast.makeText(DesafioActivity.this, "Desafio completado", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -125,7 +124,6 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
                 if (tercerDesafio_btn.getText().toString().equals("Inscribir")) {
                     new InscribirDesafio().execute(u.getId_usuario(), d.getId_desafio(), null);
                 } else {
-                    new EliminarDesafio().execute(u.getId_usuario(), d.getId_desafio());
                     Toast.makeText(DesafioActivity.this, "Desafio completado", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -10,19 +10,27 @@ public class Entrenamiento {
 
     private String distancia;
 
-    private String velocidad_media;
+    private String tiempo;
 
     private String calorias_quemadas;
 
     public Entrenamiento() {
     }
 
-    public Entrenamiento(String id_entrenamientos, String id_usuario, String distancia, String velocidad_media, String calorias_quemadas) {
+    public Entrenamiento(String id_entrenamientos, String id_usuario, String distancia, String tiempo, String calorias_quemadas) {
         this.id_entrenamientos = id_entrenamientos;
         this.id_usuario = id_usuario;
         this.distancia = distancia;
-        this.velocidad_media = velocidad_media;
+        this.tiempo = tiempo;
         this.calorias_quemadas = calorias_quemadas;
+    }
+
+    public String getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(String tiempo) {
+        this.tiempo = tiempo;
     }
 
     public String getId_entrenamientos() {
@@ -49,13 +57,7 @@ public class Entrenamiento {
         this.distancia = distancia;
     }
 
-    public String getVelocidad_media() {
-        return velocidad_media;
-    }
 
-    public void setVelocidad_media(String velocidad_media) {
-        this.velocidad_media = velocidad_media;
-    }
 
     public String getCalorias_quemadas() {
         return calorias_quemadas;
@@ -71,7 +73,7 @@ public class Entrenamiento {
                 "id_entrenamientos='" + id_entrenamientos + '\'' +
                 ", id_usuario='" + id_usuario + '\'' +
                 ", distancia='" + distancia + '\'' +
-                ", velocidad_media='" + velocidad_media + '\'' +
+                ", tiempo='" + tiempo + '\'' +
                 ", calorias_quemadas='" + calorias_quemadas + '\'' +
                 '}';
     }

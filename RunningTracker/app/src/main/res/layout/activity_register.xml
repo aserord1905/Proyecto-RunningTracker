@@ -9,14 +9,14 @@
     android:padding="48dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="141dp"
+        android:layout_height="32dp"
         android:layout_gravity="center"
         android:fontFamily="sans-serif-light"
         android:text="REGISTER"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="36dp" />
+        android:textSize="30dp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,13 +26,15 @@
 
     <EditText
         android:id="@+id/input_sexo"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
+        android:textColorHint="@color/black"
         android:fontFamily="sans-serif-light"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.4"
         android:background="@drawable/edittext_background"
-        android:hint="    Sexo :"
+        android:hint="Sexo :"
         android:textColor="@color/black"
         android:textSize="30dp" />
 
@@ -50,8 +52,10 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.4"
+        android:textColorHint="@color/black"
         android:background="@drawable/edittext_background"
-        android:hint="    Peso:"
+        android:hint="Peso:"
+        android:gravity="center_horizontal"
         android:textColor="@color/black"
         android:textSize="30dp" />
 
@@ -69,7 +73,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.4"
         android:background="@drawable/edittext_background"
-        android:hint="    Usuario:"
+        android:hint="Usuario:"
+        android:gravity="center_horizontal"
+        android:textColorHint="@color/black"
         android:textColor="@color/black"
         android:textSize="30dp" />
 
@@ -90,23 +96,49 @@
         android:layout_weight="0.4"
         android:background="@drawable/edittext_background"
         android:hint="    Contraseña:"
+        android:textColorHint="@color/black"
         android:inputType="textPassword"
         android:textSize="30dp" />
 
 
-    <EditText
-        android:id="@+id/input_rol"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fontFamily="sans-serif-light"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.4"
-        android:background="@drawable/edittext_background"
-        android:layout_marginBottom="50dp"
-        android:hint="    Rol: (Usuario o Admin)"
-        android:textSize="23dp"
-        android:layout_marginTop="-18dp"
-        android:inputType="textPassword" />
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_usuario"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_background"
+                android:fontFamily="sans-serif-light"
+                android:onClick="onRadioButtonClicked"
+                android:text="Usuario"
+                android:textColorHint="@color/black"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/radio_admin"
+                android:layout_width="168dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toEndOf="@+id/radio_usuario"
+                android:background="@drawable/edittext_background"
+                android:fontFamily="sans-serif-light"
+                android:onClick="onRadioButtonClicked"
+                android:text="Administrador"
+                android:textColor="@color/black"
+                android:textSize="19dp" />
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
