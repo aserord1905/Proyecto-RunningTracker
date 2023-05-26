@@ -160,10 +160,9 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
                     String id_usuario = resultSet.getString("id_usuario");
                     String distancia = resultSet.getString("distancia");
                     String tiempo = resultSet.getString("tiempo");
-                    String calorias_quemadas = resultSet.getString("calorias_quemadas");
 
                     // Crear un objeto Entrenamiento y agregarlo a la lista
-                    Entrenamiento entrenamiento = new Entrenamiento(id_entrenamientos,id_usuario,distancia,tiempo,calorias_quemadas);
+                    Entrenamiento entrenamiento = new Entrenamiento(id_entrenamientos,id_usuario,distancia,tiempo);
                     listaEntrenamientos.add(entrenamiento);
                 }
             } catch (SQLException e) {
@@ -240,8 +239,8 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
             Entrenamiento currentEntrenamiento = mEntrenamientos.get(position);
             userIcon.setImageResource(R.drawable.historial_carreras);
             //Obtengo la posicion en el numero de entrenamiento. Numero de filas = Numero de entrenamientos
-            userName.setText("Entrenamiento: "+(position+1)+"\nCalorias: "+currentEntrenamiento.getCalorias_quemadas()+"kcal     " +
-                    "Distancia:"+currentEntrenamiento.getDistancia()+" km\nTiempo: "+currentEntrenamiento.getTiempo()+"(h/m/s)");
+            userName.setText("Entrenamiento: "+(position+1)+
+                    "\nDistancia:"+currentEntrenamiento.getDistancia()+" km\nTiempo: "+currentEntrenamiento.getTiempo()+"(h/m/s)");
 
             // Establecer otros atributos de la vista personalizada, si es necesario
 

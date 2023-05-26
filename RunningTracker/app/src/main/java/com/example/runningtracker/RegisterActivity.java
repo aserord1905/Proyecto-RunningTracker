@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
     boolean isValid=false;
     private RadioButton radioUsuario, radioAdmin;
     private String rol = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +137,26 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                 String consulta = "INSERT INTO usuarios (id_usuario, sexo, peso, username, password, tipo) VALUES ('"+newId+"','" + sexo + "', '" + peso + "', '" + username + "', '" + password + "', '" + permiso + "')";
                 PreparedStatement statement = connection.prepareStatement(consulta);
                 int rowsInserted = statement.executeUpdate();
-                return rowsInserted > 0;
+                if (rowsInserted > 0) {
+                    // Obtener el id del rol según el valor de permiso
+                    int idRol;
+                    if (permiso.equalsIgnoreCase("usuario")) {
+                        idRol = 1; // Supongamos que el id del rol "usuario" es 1
+                    } else {
+                        idRol = 2; // Supongamos que el id del rol "admin" es 2
+                    }
+
+                    // Insertar en la tabla usuario_rol
+                    String insertUsuarioRol = "INSERT INTO usuariorol (id_usuario, id_rol) VALUES (?, ?)";
+                    PreparedStatement statementUsuarioRol = connection.prepareStatement(insertUsuarioRol);
+                    statementUsuarioRol.setInt(1, newId);
+                    statementUsuarioRol.setInt(2, idRol);
+                    statementUsuarioRol.executeUpdate();
+
+                    return true;
+                } else {
+                    return false;
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

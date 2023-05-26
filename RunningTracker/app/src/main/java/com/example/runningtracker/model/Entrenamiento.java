@@ -12,17 +12,15 @@ public class Entrenamiento {
 
     private String tiempo;
 
-    private String calorias_quemadas;
 
     public Entrenamiento() {
     }
 
-    public Entrenamiento(String id_entrenamientos, String id_usuario, String distancia, String tiempo, String calorias_quemadas) {
+    public Entrenamiento(String id_entrenamientos, String id_usuario, String distancia, String tiempo) {
         this.id_entrenamientos = id_entrenamientos;
         this.id_usuario = id_usuario;
         this.distancia = distancia;
         this.tiempo = tiempo;
-        this.calorias_quemadas = calorias_quemadas;
     }
 
     public String getTiempo() {
@@ -58,15 +56,6 @@ public class Entrenamiento {
     }
 
 
-
-    public String getCalorias_quemadas() {
-        return calorias_quemadas;
-    }
-
-    public void setCalorias_quemadas(String calorias_quemadas) {
-        this.calorias_quemadas = calorias_quemadas;
-    }
-
     @Override
     public String toString() {
         return "Entrenamiento{" +
@@ -74,7 +63,6 @@ public class Entrenamiento {
                 ", id_usuario='" + id_usuario + '\'' +
                 ", distancia='" + distancia + '\'' +
                 ", tiempo='" + tiempo + '\'' +
-                ", calorias_quemadas='" + calorias_quemadas + '\'' +
                 '}';
     }
 }

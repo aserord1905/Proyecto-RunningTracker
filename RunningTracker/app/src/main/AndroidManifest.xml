@@ -72,6 +72,10 @@
             android:name=".RegisterActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".AdminModificarActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
 
 
         <activity

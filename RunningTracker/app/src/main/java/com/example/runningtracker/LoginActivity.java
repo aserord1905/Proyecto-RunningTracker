@@ -23,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -165,36 +166,51 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                     String id = resultSet.getString("id_usuario");
                     String usuario = resultSet.getString("username");
                     String password = resultSet.getString("password");
-                    String rol = resultSet.getString("tipo");
-                    if (usuario.equals(usu) && password.equals(cont) && rol.equals(permiso)) {
 
-                        //Verifica si es usuario o administrador
-                        if (permiso.equalsIgnoreCase("Usuario")){
-                            isValid = true;
-                            //Utilizacion del SharedPreferences para poder obtener el id del usuario y no perderlo al pasar entre paginas
-                            //Esto crea o recupera un archivo de preferencias llamado "MyPrefs".
-                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                            //Este objeto se utiliza para realizar modificaciones en las preferencias almacenadas.
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            //Se almacena el id del usuario
-                            editor.putString("id_usuario", id);
-                            editor.apply();
-                            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-                            startActivity(i);
-                        }else if(permiso.equalsIgnoreCase("Admin")){
-                            isValid = true;
-                            Intent i = new Intent(LoginActivity.this, AdminActivity.class);
-                            startActivity(i);
+                    // Verificar si el usuario y la contraseña coinciden
+                    if (usuario.equals(usu) && password.equals(cont)) {
+                        // Obtener el id de la tabla usuario_rol según el id_usuario
+                        int idUsuario = Integer.parseInt(id);
+                        int idRol = getRolFromUsuarioRol(connection, idUsuario);
+
+                        // Verificar si el idRol coincide con el rol buscado
+                        if (idRol > 0) {
+                            // Verifica si es usuario o administrador
+                            if (permiso.equalsIgnoreCase("Usuario") && idRol == 1) {
+                                isValid = true;
+                                // Utilización del SharedPreferences para poder obtener el id del usuario y no perderlo al pasar entre páginas
+                                // Esto crea o recupera un archivo de preferencias llamado "MyPrefs".
+                                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                                // Este objeto se utiliza para realizar modificaciones en las preferencias almacenadas.
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                // Se almacena el id del usuario
+                                editor.putString("id_usuario", id);
+                                editor.apply();
+                                Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+                                startActivity(i);
+                            } else if (permiso.equalsIgnoreCase("Admin") && idRol == 2) {
+                                isValid = true;
+                                Intent i = new Intent(LoginActivity.this, AdminActivity.class);
+                                startActivity(i);
+                            }
                         }
-
-
                     }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return isValid;
+        }
+
+        private int getRolFromUsuarioRol(Connection connection, int idUsuario) throws SQLException {
+            String consulta = "SELECT id_rol FROM usuariorol WHERE id_usuario = ?";
+            PreparedStatement statement = connection.prepareStatement(consulta);
+            statement.setInt(1, idUsuario);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id_rol");
+            }
+            return -1; // Valor negativo para indicar que no se encontró el rol
         }
 
         public String getUserID() {
