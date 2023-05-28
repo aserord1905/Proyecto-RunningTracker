@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         @Override
         protected Boolean doInBackground(String... strings) {
             //sexo peso username password rol
-            String sexo = strings[0];
+            sexo = strings[0];
             String peso = strings[1];
             String username = strings[2];
             String password = strings[3];
@@ -165,9 +165,9 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                     // Obtener el id del rol según el valor de permiso
                     int idRol;
                     if (permiso.equalsIgnoreCase("usuario")) {
-                        idRol = 1; // Supongamos que el id del rol "usuario" es 1
+                        idRol = 1; // Id del rol usuario = 1
                     } else {
-                        idRol = 2; // Supongamos que el id del rol "admin" es 2
+                        idRol = 2;  //Id del rol administrador = 2
                     }
 
                     // Insertar en la tabla usuario_rol

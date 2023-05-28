@@ -126,6 +126,13 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(i_historial);
                 Toast.makeText(this,"Visualizando el historial...",Toast.LENGTH_LONG).show();
                 break;
+
+            case R.id.nav_salir:
+                //Bundle que te lleve a la pagina de las listas
+                Intent salir = new Intent(this,LoginActivity.class);
+                startActivity(salir);
+                Toast.makeText(this,"Saliendo de la app...",Toast.LENGTH_LONG).show();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

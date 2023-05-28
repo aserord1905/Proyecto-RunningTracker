@@ -209,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Mover la camara a la ubicacion actual
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(miUbicacion));
                 //Añadimos efectos, añadimos mas zoom
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(17).tilt(0).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(20).tilt(0).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 //Obtener los kilometros.
@@ -257,14 +257,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 break;
 
-            case R.id.nav_historial:
-
-                //Bundle que te lleve a la pagina de las listas
-                Intent i_historial = new Intent(this,HistorialActivity.class);
-                startActivity(i_historial);
-                Toast.makeText(this,"Visualizando el historial...",Toast.LENGTH_LONG).show();
-                break;
-
             case R.id.nav_historialCarreras:
 
                 Intent i_historial_carreras = new Intent(this,HistorialCarrerasActivity.class);
@@ -280,7 +272,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
 
             case R.id.nav_salir:
-                finish();
+                Intent salir = new Intent(this,LoginActivity.class);
+                startActivity(salir);
+                Toast.makeText(this,"Saliendo de la app...",Toast.LENGTH_LONG).show();
                 break;
         }
 

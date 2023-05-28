@@ -112,13 +112,6 @@ public class HistorialCarrerasActivity extends AppCompatActivity implements Navi
                 Toast.makeText(this,"Iniciando Mapas...",Toast.LENGTH_LONG).show();
                 break;
 
-            case R.id.nav_historial:
-                //Bundle que te lleve a la pagina de las listas
-                Intent i_historial = new Intent(this,HistorialActivity.class);
-                startActivity(i_historial);
-                Toast.makeText(this,"Visualizando el historial...",Toast.LENGTH_LONG).show();
-                break;
-
             case R.id.nav_historialCarreras:
                 Intent i_historial_carreras = new Intent(this,HistorialCarrerasActivity.class);
                 startActivity(i_historial_carreras );
