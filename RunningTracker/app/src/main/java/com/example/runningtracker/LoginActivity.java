@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     private ImageView instagramImage,facebookImage;
     private Button btn_inicioSesion, btnRegistro;
     private EditText usernameInput, passwordInput, inputRol;
-    private String nombreInstagram = "";
+    private String nombreInstagram = "o.p._maria";
     boolean isValid=false;
     private RadioButton radioUsuario, radioAdmin;
     private String rol = "";

@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.runningtracker.conexion.Conexion;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,6 +42,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener {
@@ -59,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView cronometroTextView;
     private long tiempoInicial = 0;
     private CountDownTimer countDownTimer;
+    private int horas, minutos,segundos;
     //Declaración de variables
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +117,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //Llamamos al metodo para iniciar el trazado de linea.
                             empezarATrazarLinea();
                             startCronometro();
-
-
                         }else{
                             btnGo.setText("GO");
                             Toast.makeText(getApplicationContext(),"Has finalizado la carrera con exito",Toast.LENGTH_LONG).show();
@@ -120,19 +124,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //Llamamos al metodo para detener el trazado de linea
                             detenerTrazadoLinea();
                             detenerCronometro();
-
+                            //Insertar el entrenamiento cronometrado
+                            InsertarEntrenamiento tareaInsertar = new InsertarEntrenamiento();
+                            tareaInsertar.execute(idUsuario, String.valueOf(distanciaTotal), String.valueOf(tiempoInicial));
                         }
-
                     }
                 }.start();
-
-
             }
         });
-
-
-
-
     }
 
     private void startCronometro() {
@@ -145,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onFinish() {
-                // No necesitarás implementar esto a menos que desees hacer algo cuando el cronómetro finalice
+                //Acciones pare terminar el cronometro
             }
         };
 
@@ -153,11 +152,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void actualizarCronometro(long tiempo) {
-        int horas = (int) (tiempo / 3600000);
-        int minutos = (int) (tiempo - horas * 3600000) / 60000;
-        int segundos = (int) (tiempo - horas * 3600000 - minutos * 60000) / 1000;
-
+        horas = (int) (tiempo / 3600000);
+        minutos = (int) (tiempo - horas * 3600000) / 60000;
+        segundos = (int) (tiempo - horas * 3600000 - minutos * 60000) / 1000;
+        //hh:mm:ss
         String tiempoFormateado = String.format("%02d:%02d:%02d", horas, minutos, segundos);
+        //x.xx
         String distanciaFormateada = String.format("%.2f", distanciaTotal);
         cronometroTextView.setText("Tiempo en carrera:\n"+tiempoFormateado+"\nDistancia: "+distanciaFormateada+" km");
     }
@@ -209,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Mover la camara a la ubicacion actual
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(miUbicacion));
                 //Añadimos efectos, añadimos mas zoom
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(20).tilt(0).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(miUbicacion).zoom(18).tilt(0).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 //Obtener los kilometros.
@@ -224,7 +224,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Actualizacion de datos y le pasamos el escuchador
         //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
 
-        //Nose si esta bien
+        //Mas preciso que con network
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
     }
@@ -305,6 +305,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //METODOS DE TRAZADO DE LÍNEAS
     private void empezarATrazarLinea() {
+        //Booleano controlar carrera.
         trazandoLinea = true;
         PolylineOptions polylineOptions = new PolylineOptions().clickable(true);
         polyline = mMap.addPolyline(polylineOptions);
@@ -325,6 +326,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMyLocationChangeListener(null);
         polyline.remove();
     }
+
+    private class InsertarEntrenamiento extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            // sexo peso username password rol
+            idUsuario = strings[0];
+            distanciaTotal = Double.parseDouble(strings[1]);
+            tiempoInicial = Long.parseLong(strings[2]);
+
+            return insertValue(idUsuario, distanciaTotal, tiempoInicial);
+        }
+
+        public boolean insertValue(String idUsuario, double distanciaTotal, Long tiempoInicial) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection connection = Conexion.getConnection();
+
+                String query = "SELECT MAX(id_entrenamientos) FROM entrenamientos";
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery();
+                String lastIdStr = rs.next() ? rs.getString(1) : "0"; // Si la tabla está vacía, se asigna el valor 0 por defecto
+
+                // Convertir el último valor de id_usuario a int y sumarle uno
+                int newIdEntrenamiento = Integer.parseInt(lastIdStr) + 1;
+                String consulta = "INSERT INTO entrenamientos (id_entrenamientos, id_usuario, distancia, tiempo) VALUES (?, ?, ?, ?)";
+                PreparedStatement statement = connection.prepareStatement(consulta);
+                statement.setInt(1, newIdEntrenamiento);
+                statement.setString(2, idUsuario);
+                statement.setDouble(3, distanciaTotal);
+                statement.setString(4, formatTiempo(tiempoInicial));
+
+                int rowsInserted = statement.executeUpdate();
+                return rowsInserted > 0;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        private String formatTiempo(Long tiempoInicial) {
+            int horas = (int) (tiempoInicial / 3600000);
+            int minutos = (int) (tiempoInicial - horas * 3600000) / 60000;
+            int segundos = (int) (tiempoInicial - horas * 3600000 - minutos * 60000) / 1000;
+
+            return String.format("%02d:%02d:%02d", horas, minutos, segundos);
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean res) {
+            if (res) {
+                Toast.makeText(MapsActivity.this, "Carrera registrada exitosamente", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MapsActivity.this, "Error al registrar la carrera", Toast.LENGTH_LONG).show();
+            }
+            super.onPostExecute(res);
+        }
+    }
+
+
+
 
 
 
