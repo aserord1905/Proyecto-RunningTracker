@@ -33,8 +33,9 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
     DAO dao = new DAOImpl();
     boolean valueReturn=false;
     boolean isValid=false;
-    private RadioButton radioUsuario, radioAdmin;
+    private RadioButton radioUsuario, radioAdmin,radioHombre,radioMujer;
     private String rol = "";
+    private String sexo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_register);
 
         //Campos de texto.
-        sexoInput = findViewById(R.id.input_sexo);
+
         pesoInput = findViewById(R.id.input_peso);
         usernameInput = findViewById(R.id.input_username);
         passwordInput = findViewById(R.id.input_password);
@@ -50,9 +51,30 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         radioUsuario = findViewById(R.id.radio_usuario);
         radioAdmin = findViewById(R.id.radio_admin);
 
+        // Referenciar los elementos sexo
+        radioHombre = findViewById(R.id.radio_hombre);
+        radioMujer = findViewById(R.id.radio_mujer);
+
         //Botones
         btn_registro = findViewById(R.id.btn_registro);
         btn_iniciosesion = findViewById(R.id.btn_iniciosesion);
+
+        radioMujer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Establecer el valor de rol como "usuario"
+                sexo = "mujer";
+            }
+        });
+
+        radioHombre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Establecer el valor de rol como "usuario"
+                sexo = "hombre";
+            }
+        });
+
         radioUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +105,6 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         btn_registro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sexo = sexoInput.getText().toString();
                 String username = usernameInput.getText().toString();
                 String peso = pesoInput.getText().toString();
                 String password = passwordInput.getText().toString();
@@ -91,6 +112,9 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                 // Validar que se haya seleccionado un rol
                 if (rol.isEmpty()) {
                     Snackbar.make(findViewById(R.id.layoutRegister), "Por favor, selecciona un rol", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }else if(sexo.equals("")){
+                    Snackbar.make(findViewById(R.id.layoutRegister), "Por favor, seleccione el sexo", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
 

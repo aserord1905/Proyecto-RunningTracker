@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         usernameInput = findViewById(R.id.input_usuario);
         passwordInput = findViewById(R.id.input_contrasena);
 
-// Referenciar los elementos
+         // Referenciar los elementos
         radioUsuario = findViewById(R.id.radio_usuario);
         radioAdmin = findViewById(R.id.radio_admin);
         //Botones inicio sesion y registro
