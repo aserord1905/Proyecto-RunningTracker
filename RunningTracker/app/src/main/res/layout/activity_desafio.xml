@@ -68,14 +68,7 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_inscribirPrimerDesafio"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="bottom|right"
-            android:backgroundTint="#C92C6D"
-            android:text="Inscribir"
-            android:textSize="9dp" />
+
 
     </androidx.cardview.widget.CardView>
 
@@ -123,14 +116,7 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-        <Button
-            android:id="@+id/btn_inscribirSegundoDesafio"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="bottom|right"
-            android:backgroundTint="#C92C6D"
-            android:text="Inscribir"
-            android:textSize="9dp" />
+
     </androidx.cardview.widget.CardView>
 
 
@@ -176,14 +162,6 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-        <Button
-            android:id="@+id/btn_inscribirTercerDesafio"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="bottom|right"
-            android:backgroundTint="#C92C6D"
-            android:text="Inscribir"
-            android:textSize="9dp" />
     </androidx.cardview.widget.CardView>
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView

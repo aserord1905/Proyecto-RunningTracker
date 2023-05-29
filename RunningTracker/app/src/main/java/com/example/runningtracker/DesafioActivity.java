@@ -43,7 +43,8 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
     private Desafios d;
     private Historial h;
     private List<Desafios> listaDesafios;
-    private String idDesafio;
+    private String idDesafio = "";
+    private Desafios primerDesafio, segundoDesafio, tercerDesafio;
 
     /**TABLA BD HISTORIAL_DESAFIOS**/
     @Override
@@ -71,6 +72,11 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         tituloSegundoDesafio = findViewById(R.id.titulo2);
         tituloTercerDesafio = findViewById(R.id.titulo3);
 
+        //Por defecto en rojo
+        tituloPrimerDesafio.setTextColor(Color.RED);
+        tituloSegundoDesafio.setTextColor(Color.RED);
+        tituloTercerDesafio.setTextColor(Color.RED);
+
         //Asociar ids de las fechas de los desafios
         kmsPrimerDesafio = findViewById(R.id.fecha1);
         kmsSegundoDesafio = findViewById(R.id.fecha2);
@@ -81,59 +87,10 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         descripcionSegundoDesafio = findViewById(R.id.descripcion2);
         descripcionTercerDesafio = findViewById(R.id.descripcion3);
 
-        //Asociar ids botones interfaz
-        primerDesafio_btn = findViewById(R.id.btn_inscribirPrimerDesafio);
-        segundoDesafio_btn = findViewById(R.id.btn_inscribirSegundoDesafio);
-        tercerDesafio_btn = findViewById(R.id.btn_inscribirTercerDesafio);
-
-        //PRIMER BOTON
-        primerDesafio_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Acciones a realizar cuando se hace clic en el primer botón
-                d.setId_desafio("1");
-                //CONTROLO SI EL USUARIO ESTA O NO INSCRITO POR EL TEXTO DEL BOTON
-                if (primerDesafio_btn.getText().toString().equals("Inscribir")) {
-                    new InscribirDesafio().execute(u.getId_usuario(), d.getId_desafio(), null);
-                } else {
-                    Toast.makeText(DesafioActivity.this, "Desafio completado", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        segundoDesafio_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Acciones a realizar cuando se hace clic en el segundo botón
-                int id_Desafio = 2;
-                d.setId_desafio(String.valueOf(id_Desafio));
-                if (segundoDesafio_btn.getText().toString().equals("Inscribir")) {
-                    new InscribirDesafio().execute(u.getId_usuario(), d.getId_desafio(), null);
-                } else {
-                    Toast.makeText(DesafioActivity.this, "Desafio completado", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        tercerDesafio_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Acciones a realizar cuando se hace clic en el tercer botón
-                int id_Desafio = 3;
-                d.setId_desafio(String.valueOf(id_Desafio));
-                if (tercerDesafio_btn.getText().toString().equals("Inscribir")) {
-                    new InscribirDesafio().execute(u.getId_usuario(), d.getId_desafio(), null);
-                } else {
-                    Toast.makeText(DesafioActivity.this, "Desafio completado", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         listaDesafios = new ArrayList<>();
 
         ObtenerDesafiosTask obtenerDesafiosTask = new ObtenerDesafiosTask();
         obtenerDesafiosTask.execute();
-
         VerificarInscripcionTask verificarInscripcionTask = new VerificarInscripcionTask();
         verificarInscripcionTask.execute();
     }
@@ -197,102 +154,35 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
 
         @Override
         protected void onPostExecute(List<Desafios> desafios) {
-            Desafios primerDesafio = desafios.get(0);
-            tituloPrimerDesafio.setText(primerDesafio.getNombre());
-            kmsPrimerDesafio.setText("Número de kilometos a realizar: " + primerDesafio.getKilometros_desafio() + "kms");
-            descripcionPrimerDesafio.setText("Descripción:\n" + primerDesafio.getDescripcion());
+            if (desafios != null && desafios.size() >= 3) {
+                primerDesafio = desafios.get(0);
+                tituloPrimerDesafio.setText(primerDesafio.getNombre());
+                kmsPrimerDesafio.setText("Número de kilómetros a realizar: " + primerDesafio.getKilometros_desafio() + "kms");
+                descripcionPrimerDesafio.setText("Descripción:\n" + primerDesafio.getDescripcion());
 
-            Desafios segundoDesafio = desafios.get(1);
-            tituloSegundoDesafio.setText(segundoDesafio.getNombre());
-            kmsSegundoDesafio.setText("Número de kilometos a realizar: " + segundoDesafio.getKilometros_desafio() + "kms");
-            descripcionSegundoDesafio.setText("Descripción:\n" + segundoDesafio.getDescripcion());
+                segundoDesafio = desafios.get(1);
+                tituloSegundoDesafio.setText(segundoDesafio.getNombre());
+                kmsSegundoDesafio.setText("Número de kilómetros a realizar: " + segundoDesafio.getKilometros_desafio() + "kms");
+                descripcionSegundoDesafio.setText("Descripción:\n" + segundoDesafio.getDescripcion());
 
-            Desafios tercerDesafio = desafios.get(2);
-            tituloTercerDesafio.setText(tercerDesafio.getNombre());
-            kmsTercerDesafio.setText("Número de kilometos a realizar: " + tercerDesafio.getKilometros_desafio() + "kms");
-            descripcionTercerDesafio.setText("Descripción:\n" + tercerDesafio.getDescripcion());
+                tercerDesafio = desafios.get(2);
+                tituloTercerDesafio.setText(tercerDesafio.getNombre());
+                kmsTercerDesafio.setText("Número de kilómetros a realizar: " + tercerDesafio.getKilometros_desafio() + "kms");
+                descripcionTercerDesafio.setText("Descripción:\n" + tercerDesafio.getDescripcion());
 
-        }
-    }
 
-    private class InscribirDesafio extends AsyncTask<String, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            //Pasar id del usuario, id del desafio, kilometros realizados
-            String idUsuario = strings[0];
-            String idDesafio = strings[1];
-            String kilometros_realizados = strings[2];
-            return insertValue(idUsuario, idDesafio, kilometros_realizados);
-        }
-
-        public boolean insertValue(String idUsuario, String idDesafio, String kilometros_realizados) {
-
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection connection = Conexion.getConnection();
-
-                // Verificar si el id_usuario ya existe en la tabla
-                String query = "SELECT id_usuario FROM historial_desafios WHERE id_usuario = ?";
-                PreparedStatement stmt = connection.prepareStatement(query);
-                stmt.setString(1, idUsuario);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    // El id_usuario ya existe en la tabla
-                    return false;
+                if (idDesafio.equals(primerDesafio.getId_desafio())) {
+                    ObtenerNumDesafiosTask obtenerNumDesafiosTask1 = new ObtenerNumDesafiosTask();
+                    obtenerNumDesafiosTask1.execute(primerDesafio.getId_desafio());
+                } else if (idDesafio.equals(segundoDesafio.getId_desafio())) {
+                    ObtenerNumDesafiosTask obtenerNumDesafiosTask2 = new ObtenerNumDesafiosTask();
+                    obtenerNumDesafiosTask2.execute(segundoDesafio.getId_desafio());
+                } else if (idDesafio.equals(tercerDesafio.getId_desafio())) {
+                    ObtenerNumDesafiosTask obtenerNumDesafiosTask3 = new ObtenerNumDesafiosTask();
+                    obtenerNumDesafiosTask3.execute(tercerDesafio.getId_desafio());
                 }
-
-                // Obtener el nuevo id_historial
-                query = "SELECT MAX(id_historial) FROM historial_desafios";
-                stmt = connection.prepareStatement(query);
-                rs = stmt.executeQuery();
-                String lastIdStr = rs.next() ? rs.getString(1) : "0";
-                int newId = 0;
-                if (lastIdStr != null) {
-                    newId = Integer.parseInt(lastIdStr) + 1;
-                }
-
-
-                if (lastIdStr != null) {
-                    newId = Integer.parseInt(lastIdStr) + 1;
-                }
-                String consulta = "INSERT INTO historial_desafios (id_historial, id_usuario, id_desafio, kilometros_realizados)  VALUES ('" + newId + "','" + idUsuario + "', '" + idDesafio + "', '" + kilometros_realizados + "')";
-                PreparedStatement statement = connection.prepareStatement(consulta);
-                int rowsInserted = statement.executeUpdate();
-                return rowsInserted > 0;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
             }
 
-        }
-
-        @Override
-        protected void onPostExecute(Boolean res) {
-            super.onPostExecute(res);
-            if (res) {
-                if (d.getId_desafio() != null && d.getId_desafio().equals("1")) {
-                    // El id_desafio es igual a 1
-                    primerDesafio_btn.setText("En curso");
-                    estilosDesafios(tituloPrimerDesafio, tituloSegundoDesafio, tituloTercerDesafio);
-
-                } else if (d.getId_desafio() != null && d.getId_desafio().equals("2")) {
-                    segundoDesafio_btn.setText("En curso");
-                    estilosDesafios(tituloSegundoDesafio, tituloPrimerDesafio, tituloTercerDesafio);
-
-                } else if (d.getId_desafio() != null && d.getId_desafio().equals("3")) {
-                    tercerDesafio_btn.setText("En curso");
-                    estilosDesafios(tituloTercerDesafio, tituloPrimerDesafio, tituloSegundoDesafio);
-
-                }
-                // La inserción fue exitosa, mostrar un Toast indicando que el usuario se inscribió correctamente
-                Toast.makeText(DesafioActivity.this, "Usuario inscrito correctamente", Toast.LENGTH_SHORT).show();
-            } else {
-
-                // La inserción falló, mostrar un Toast indicando que el usuario ya está inscrito
-                Toast.makeText(DesafioActivity.this, "El usuario ya está inscrito", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
@@ -311,25 +201,17 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
             if (inscrito) {
                 if (idDesafio.equals("1")) {
                     // El id_desafio es igual a 1
-                    primerDesafio_btn.setText("En curso");
-                    //Proporciona los colores
-                    estilosDesafios(tituloPrimerDesafio, tituloSegundoDesafio, tituloTercerDesafio);
-
+                    tituloPrimerDesafio.setTextColor(Color.GREEN);
                 } else if (idDesafio.equals("2")) {
-                    segundoDesafio_btn.setText("En curso");
-                    //Inscrito color verde
-                    estilosDesafios(tituloSegundoDesafio, tituloPrimerDesafio, tituloTercerDesafio);
-
+                    tituloSegundoDesafio.setTextColor(Color.GREEN);
                 } else if (idDesafio.equals("3")) {
-                    tercerDesafio_btn.setText("En curso");
-
-                    estilosDesafios(tituloTercerDesafio, tituloPrimerDesafio, tituloSegundoDesafio);
+                    tituloTercerDesafio.setTextColor(Color.GREEN);
                 }
-
             }
         }
     }
 
+    //Comprueba que tiene algun desafio y si lo tiene lo pinta en verde
     private boolean usuarioEstaInscrito() {
         try {
             // Establecer la conexión a la base de datos
@@ -354,62 +236,43 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         return false; // El usuario no está inscrito en ningún desafío
     }
 
-    private void estilosDesafios(TextView textoVerde, TextView textoRojo1, TextView textoRojo2) {
-        textoVerde.setTextColor(Color.parseColor("#4cff33"));
-        textoRojo1.setTextColor(Color.parseColor("#ff0000"));
-        textoRojo2.setTextColor(Color.parseColor("#ff0000"));
-    }
 
-    private void restablecerDesafios(TextView textoVerde, TextView textoRojo1, TextView textoRojo2) {
-        textoVerde.setTextColor(Color.parseColor("#ffffff"));
-        textoRojo1.setTextColor(Color.parseColor("#ffffff"));
-        textoRojo2.setTextColor(Color.parseColor("#ffffff"));
-    }
-
-    private class EliminarDesafio extends AsyncTask<String, Void, Boolean> {
-
+    private class ObtenerNumDesafiosTask extends AsyncTask<String, Void, Integer> {
         @Override
-        protected Boolean doInBackground(String... strings) {
-            // Obtener los parámetros necesarios para eliminar la fila
-            String idUsuario = strings[0];
-            String idDesafio = strings[1];
-
-            // Realizar la eliminación de la fila en la base de datos
-            try {
-                Connection connection = Conexion.getConnection();
-                String consulta = "DELETE FROM historial_desafios WHERE id_usuario = ? AND id_desafio = ?";
-                PreparedStatement statement = connection.prepareStatement(consulta);
-                statement.setString(1, idUsuario);
-                statement.setString(2, idDesafio);
-                int rowsDeleted = statement.executeUpdate();
-
-                return rowsDeleted > 0;
+        protected Integer doInBackground(String... params) {
+            String idDesafio = params[0];
+            int numDesafios = 0;
+            try (Connection connection = Conexion.getConnection()) {
+                String consulta = "SELECT COUNT(*) AS num_desafios FROM historial_desafios WHERE id_usuario = ? AND id_desafio = ?";
+                try (PreparedStatement statement = connection.prepareStatement(consulta)) {
+                    statement.setString(1, idUsuario);
+                    statement.setString(2, idDesafio);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            numDesafios = resultSet.getInt("num_desafios");
+                        }
+                    }
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
+            return numDesafios;
         }
 
         @Override
-        protected void onPostExecute(Boolean res) {
-            super.onPostExecute(res);
-            if (res) {
-                // Restaurar el estado original del botón de inscripción
-                if (d.getId_desafio() != null && d.getId_desafio().equals("1")) {
-                    primerDesafio_btn.setText("Inscribir");
-                    //Restablecer colores
-                    restablecerDesafios(tituloPrimerDesafio, tituloSegundoDesafio, tituloTercerDesafio);
-
-                } else if (d.getId_desafio() != null && d.getId_desafio().equals("2")) {
-                    segundoDesafio_btn.setText("Inscribir");
-                    restablecerDesafios(tituloPrimerDesafio, tituloSegundoDesafio, tituloTercerDesafio);
-
-                } else if (d.getId_desafio() != null && d.getId_desafio().equals("3")) {
-                    tercerDesafio_btn.setText("Inscribir");
-                    restablecerDesafios(tituloPrimerDesafio, tituloSegundoDesafio, tituloTercerDesafio);
-
-                }
+        protected void onPostExecute(Integer numDesafios) {
+            // Actualizar el número de desafíos en los TextView correspondientes
+            if (idDesafio.equals(primerDesafio.getId_desafio())) {
+                tituloPrimerDesafio.setText(tituloPrimerDesafio.getText() + " (" + numDesafios + ")");
+            } else if (idDesafio.equals(segundoDesafio.getId_desafio())) {
+                tituloSegundoDesafio.setText(tituloSegundoDesafio.getText() + " (" + numDesafios + ")");
+            } else if (idDesafio.equals(tercerDesafio.getId_desafio())) {
+                tituloTercerDesafio.setText(tituloTercerDesafio.getText() + " (" + numDesafios + ")");
             }
         }
     }
+
+
+
+
 }
