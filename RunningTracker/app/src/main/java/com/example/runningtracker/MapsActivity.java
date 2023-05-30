@@ -64,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean carreraenCurso=false;
     private String idUsuario;
     private Location lastLocation;
-    private double distanciaTotal = 5;
+    private double distanciaTotal = 0;
     private TextView cronometroTextView;
     private long tiempoInicial = 0;
     private String idDesafio;
