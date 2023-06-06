@@ -1,12 +1,14 @@
 package com.example.runningtracker;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -31,17 +33,20 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
     private EditText sexoInput, pesoInput, usernameInput, passwordInput, rolInput;
     private Button btn_registro, btn_iniciosesion;
     DAO dao = new DAOImpl();
-    boolean valueReturn=false;
-    boolean isValid=false;
+    private String nombreInstagram = "runningtracker";
     private RadioButton radioUsuario, radioAdmin,radioHombre,radioMujer;
     private String rol = "";
     private String sexo;
+    private ImageView instagramImage,facebookImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        //Asignamos el imageview
+        instagramImage = findViewById(R.id.image_instagram);
+        facebookImage = findViewById(R.id.image_facebook);
         //Campos de texto.
 
         pesoInput = findViewById(R.id.input_peso);
@@ -125,6 +130,45 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        instagramImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://www.instagram.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setPackage("com.instagram.android");
+
+                // Verificar si la aplicación de Instagram está instalada en el dispositivo
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    // Si la aplicación de Instagram no está instalada, abrir la página de Instagram en el navegador
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/"+nombreInstagram));
+                    startActivity(webIntent);
+                }
+            }
+        });
+
+
+        facebookImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://www.facebook.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setPackage("com.facebook.katana");
+
+                // Verificar si la aplicación de Instagram está instalada en el dispositivo
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    // Si la aplicación de Instagram no está instalada, abrir la página de Instagram en el navegador
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/"));
+                    startActivity(webIntent);
+                }
+            }
+        });
+
+
+
     }
 
     @Override
@@ -136,58 +180,22 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
 
         @Override
         protected Boolean doInBackground(String... strings) {
-            //sexo peso username password rol
-            sexo = strings[0];
-            String peso = strings[1];
-            String username = strings[2];
-            String password = strings[3];
-            String permiso =  strings[4];
-            return insertValue(sexo, peso, username, password, permiso);
-        }
-
-        public boolean insertValue(String sexo, String peso, String username, String password, String permiso) {
-
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection connection = Conexion.getConnection();
-
-                String query = "SELECT MAX(id_usuario) FROM usuarios";
-                PreparedStatement stmt = connection.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery(query);
-                String lastIdStr = rs.next() ? rs.getString(1) : "0"; // Si la tabla está vacía, se asigna el valor 0 por defecto
-
-                // Convertir el último valor de id_usuario a int y sumarle uno
-                int newId = Integer.parseInt(lastIdStr) + 1;
-                String consulta = "INSERT INTO usuarios (id_usuario, sexo, peso, username, password, tipo) VALUES ('"+newId+"','" + sexo + "', '" + peso + "', '" + username + "', '" + password + "', '" + permiso + "')";
-                PreparedStatement statement = connection.prepareStatement(consulta);
-                int rowsInserted = statement.executeUpdate();
-                if (rowsInserted > 0) {
-                    // Obtener el id del rol según el valor de permiso
-                    int idRol;
-                    if (permiso.equalsIgnoreCase("usuario")) {
-                        idRol = 1; // Id del rol usuario = 1
-                    } else {
-                        idRol = 2;  //Id del rol administrador = 2
-                    }
-
-                    // Insertar en la tabla usuario_rol
-                    String insertUsuarioRol = "INSERT INTO usuariorol (id_usuario, id_rol) VALUES (?, ?)";
-                    PreparedStatement statementUsuarioRol = connection.prepareStatement(insertUsuarioRol);
-                    statementUsuarioRol.setInt(1, newId);
-                    statementUsuarioRol.setInt(2, idRol);
-                    statementUsuarioRol.executeUpdate();
-
-                    return true;
-                } else {
-                    return false;
-                }
-
+                //sexo peso username password rol
+                sexo = strings[0];
+                String peso = strings[1];
+                String username = strings[2];
+                String password = strings[3];
+                String permiso =  strings[4];
+                return dao.insertarUsuario(sexo, peso, username, password, permiso);
             } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+                // Manejo de la excepción
+                e.printStackTrace(); // Imprime el rastro de la excepción en la consola
+                return false; // O realiza alguna otra acción según tus necesidades
             }
-
         }
+
+
 
         @Override
         protected void onPostExecute(Boolean res) {

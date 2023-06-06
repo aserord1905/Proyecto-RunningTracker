@@ -27,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.runningtracker.conexion.Conexion;
+import com.example.runningtracker.dao.DAO;
+import com.example.runningtracker.dao.DAOImpl;
 import com.example.runningtracker.model.Desafios;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean carreraenCurso=false;
     private String idUsuario;
     private Location lastLocation;
-    private double distanciaTotal = 0;
+    private double distanciaTotal = 12;
     private TextView cronometroTextView;
     private long tiempoInicial = 0;
     private String idDesafio;
@@ -73,6 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int horas, minutos,segundos;
     private Desafios primerDesafio,segundoDesafio,tercerDesafio;
 
+    DAO dao = new DAOImpl();
 
     //Declaración de variables
     @Override
@@ -147,11 +150,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Toast.makeText(MapsActivity.this, "Has completado el desafio PRINCIPIANTE", Toast.LENGTH_SHORT).show();
                             } else if (distanciaTotal >= Double.parseDouble(segundoDesafio.getKilometros_desafio()) && distanciaTotal < Double.parseDouble(tercerDesafio.getKilometros_desafio())) {
                                 InsertarDesafio tareaInsertarDesafio = new InsertarDesafio();
-                                tareaInsertarDesafio.execute(idUsuario, primerDesafio.getId_desafio(), String.valueOf(distanciaTotal));
+                                tareaInsertarDesafio.execute(idUsuario, segundoDesafio.getId_desafio(), String.valueOf(distanciaTotal));
                                 Toast.makeText(MapsActivity.this, "Has completado el desafio INTERMEDIO ", Toast.LENGTH_SHORT).show();
                             } else if (distanciaTotal >= Double.parseDouble(tercerDesafio.getKilometros_desafio())) {
                                 InsertarDesafio tareaInsertarDesafio = new InsertarDesafio();
-                                tareaInsertarDesafio.execute(idUsuario, primerDesafio.getId_desafio(), String.valueOf(distanciaTotal));
+                                tareaInsertarDesafio.execute(idUsuario, tercerDesafio.getId_desafio(), String.valueOf(distanciaTotal));
                                 Toast.makeText(MapsActivity.this, "Has completado el desafio AVANZADO ", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(MapsActivity.this, "No has conseguido ningún desafío", Toast.LENGTH_SHORT).show();
@@ -457,35 +460,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             distanciaTotal = Double.parseDouble(strings[2]);
             idDesafio = strings[1];
 
-            return insertValue(idUsuario, idDesafio,distanciaTotal);
+            return dao.insertarDesafio(idUsuario, idDesafio,distanciaTotal);
         }
 
-        public boolean insertValue(String idUsuario, String id_desafio ,double distanciaTotal) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection connection = Conexion.getConnection();
 
-                String query = "SELECT MAX(id_historial) FROM historial_desafios";
-                PreparedStatement stmt = connection.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery();
-                String lastIdStr = rs.next() ? rs.getString(1) : "0"; // Si la tabla está vacía, se asigna el valor 0 por defecto
-
-                // Convertir el último valor de id_usuario a int y sumarle uno
-                int newIdDesafio = Integer.parseInt(lastIdStr) + 1;
-                String consulta = "INSERT INTO historial_desafios (id_historial, id_usuario, id_desafio, kilometros_realizados) VALUES (?, ?, ?, ?)";
-                PreparedStatement statement = connection.prepareStatement(consulta);
-                statement.setInt(1, newIdDesafio);
-                statement.setString(2, idUsuario);
-                statement.setString(3, id_desafio);
-                statement.setDouble(4, distanciaTotal);
-
-                int rowsInserted = statement.executeUpdate();
-                return rowsInserted > 0;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
         @Override
         protected void onPostExecute(Boolean res) {
             if (res) {

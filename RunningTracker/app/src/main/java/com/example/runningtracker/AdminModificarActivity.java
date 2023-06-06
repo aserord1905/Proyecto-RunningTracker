@@ -18,6 +18,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.runningtracker.conexion.Conexion;
+import com.example.runningtracker.dao.DAO;
+import com.example.runningtracker.dao.DAOImpl;
 import com.example.runningtracker.model.Desafios;
 import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -37,7 +39,7 @@ public class AdminModificarActivity extends AppCompatActivity implements Navigat
             descripcionSegundoDesafio, descripcionTercerDesafio;
     private List<Desafios> listaDesafios;
     private Button btn_modificarDesafios;
-
+    DAO dao = new DAOImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +129,7 @@ public class AdminModificarActivity extends AppCompatActivity implements Navigat
 
     public class ObtenerDesafiosTask extends AsyncTask<Void, Void, List<Desafios>> {
         @Override
-        protected List<Desafios> doInBackground(Void... voids) {
+        public List<Desafios> doInBackground(Void... voids) {
             String consulta = "SELECT * FROM desafios";
             try (Connection connection = Conexion.getConnection();
                  PreparedStatement statement = connection.prepareStatement(consulta);
@@ -189,13 +191,13 @@ public class AdminModificarActivity extends AppCompatActivity implements Navigat
             // Realizar las actualizaciones en la base de datos
             try (Connection connection = Conexion.getConnection()) {
                 // Actualizar el primer desafío
-                actualizarDesafio(connection, listaDesafios.get(0).getId_desafio(), nuevoKmsPrimerDesafio, nuevaDescripcionPrimerDesafio);
+                dao.actualizarDesafio(connection, listaDesafios.get(0).getId_desafio(), nuevoKmsPrimerDesafio, nuevaDescripcionPrimerDesafio);
 
                 // Actualizar el segundo desafío
-                actualizarDesafio(connection, listaDesafios.get(1).getId_desafio(), nuevoKmsSegundoDesafio, nuevaDescripcionSegundoDesafio);
+                dao.actualizarDesafio(connection, listaDesafios.get(1).getId_desafio(), nuevoKmsSegundoDesafio, nuevaDescripcionSegundoDesafio);
 
                 // Actualizar el tercer desafío
-                actualizarDesafio(connection, listaDesafios.get(2).getId_desafio(), nuevoKmsTercerDesafio, nuevaDescripcionTercerDesafio);
+                dao.actualizarDesafio(connection, listaDesafios.get(2).getId_desafio(), nuevoKmsTercerDesafio, nuevaDescripcionTercerDesafio);
 
                 return true;
             } catch (SQLException e) {
@@ -215,15 +217,7 @@ public class AdminModificarActivity extends AppCompatActivity implements Navigat
             }
         }
 
-        private void actualizarDesafio(Connection connection, String idDesafio, String nuevosKilometros, String nuevaDescripcion) throws SQLException {
-            String consulta = "UPDATE desafios SET kilometros_desafio = ?, descripcion = ? WHERE id_desafio = ?";
-            try (PreparedStatement statement = connection.prepareStatement(consulta)) {
-                statement.setString(1, nuevosKilometros);
-                statement.setString(2, nuevaDescripcion);
-                statement.setString(3, idDesafio);
-                statement.executeUpdate();
-            }
-        }
+
     }
 
 }

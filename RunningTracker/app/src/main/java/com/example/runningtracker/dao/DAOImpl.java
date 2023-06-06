@@ -17,77 +17,86 @@ public class DAOImpl implements DAO{
 
 
     @Override
-    public boolean insertarUsuario(Usuario usuario) throws SQLException {
-        Connection  c= null;
-        boolean valueReturn = false;
-        String sql = "INSERT INTO usuarios VALUES(?,?,?,?,?) WHERE id_usuario = 1";
-
+    public boolean insertarUsuario(String sexo, String peso, String username, String password, String permiso) throws SQLException {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = Conexion.getConnection();
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            c = Conexion.getConnection();
-            c.setAutoCommit(false);
-            // Desactivar el autocommit
+            String query = "SELECT MAX(id_usuario) FROM usuarios";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery(query);
+            String lastIdStr = rs.next() ? rs.getString(1) : "0"; // Si la tabla está vacía, se asigna el valor 0 por defecto
 
-            if (c!=null){
-                Log.d("MSG","Conexion realizada a la base de datos");
-
-                PreparedStatement sqlStatement = c.prepareStatement(sql);
-
-                sqlStatement.setString(1, usuario.getUsername());
-                sqlStatement.setString(2, usuario.getPassword());
-                sqlStatement.setString(3, usuario.getPeso());
-                sqlStatement.setString(4, usuario.getSexo());
-                sqlStatement.setString(5, usuario.getTipo());
-
-                if (sqlStatement.executeUpdate() > 0) {
-                   valueReturn=true;
+            // Convertir el último valor de id_usuario a int y sumarle uno
+            int newId = Integer.parseInt(lastIdStr) + 1;
+            String consulta = "INSERT INTO usuarios (id_usuario, sexo, peso, username, password, tipo) VALUES ('"+newId+"','" + sexo + "', '" + peso + "', '" + username + "', '" + password + "', '" + permiso + "')";
+            PreparedStatement statement = connection.prepareStatement(consulta);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                // Obtener el id del rol según el valor de permiso
+                int idRol;
+                if (permiso.equalsIgnoreCase("usuario")) {
+                    idRol = 1; // Id del rol usuario = 1
+                } else {
+                    idRol = 2;  //Id del rol administrador = 2
                 }
 
-                c.commit();
-                c.close();
-            }else
-                Log.d("MSG","No existe conexion con la FUKIN BD");
+                // Insertar en la tabla usuario_rol
+                String insertUsuarioRol = "INSERT INTO usuariorol (id_usuario, id_rol) VALUES (?, ?)";
+                PreparedStatement statementUsuarioRol = connection.prepareStatement(insertUsuarioRol);
+                statementUsuarioRol.setInt(1, newId);
+                statementUsuarioRol.setInt(2, idRol);
+                statementUsuarioRol.executeUpdate();
 
-        }catch (SQLException e) {
-            c.rollback();
-             throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return valueReturn;
     }
 
     @Override
-    public boolean modificarUsuario(Usuario usuario) throws SQLException {
-        Connection c = null;
-        boolean valueReturn = false;
-        String sql = "UPDATE usuario SET Username = ?, Password = ?, Peso = ?, Sexo = ?, Tipo = ? WHERE Id = ?";
-
-        try{
-            c = Conexion.getConnection();
-            //AUTOCOMMIT
-            c.setAutoCommit(false);
-            PreparedStatement sqlStatement = c.prepareStatement(sql);
-            sqlStatement.setString(1, usuario.getUsername());
-            sqlStatement.setString(2, usuario.getPassword());
-            sqlStatement.setString(3, usuario.getPeso());
-            sqlStatement.setString(4, usuario.getSexo());
-            sqlStatement.setString(5, usuario.getTipo());
-            sqlStatement.setString(6, usuario.getId_usuario());
-
-            if (sqlStatement.executeUpdate()>0){
-                valueReturn = true;
-            }
-
-            c.commit();
-
-            //Nose si esto dara error
-            c.close();
-        }catch (SQLException e) {
-            c.rollback();
-            throw new RuntimeException(e);
+    public void actualizarDesafio(Connection connection, String idDesafio, String nuevosKilometros, String nuevaDescripcion) {
+        String consulta = "UPDATE desafios SET kilometros_desafio = ?, descripcion = ? WHERE id_desafio = ?";
+        try (PreparedStatement statement = connection.prepareStatement(consulta)) {
+            statement.setString(1, nuevosKilometros);
+            statement.setString(2, nuevaDescripcion);
+            statement.setString(3, idDesafio);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return valueReturn;
+    }
+
+    @Override
+    public boolean insertarDesafio(String idUsuario, String id_desafio, double distanciaTotal) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = Conexion.getConnection();
+
+            String query = "SELECT MAX(id_historial) FROM historial_desafios";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            String lastIdStr = rs.next() ? rs.getString(1) : "0"; // Si la tabla está vacía, se asigna el valor 0 por defecto
+
+            // Convertir el último valor de id_usuario a int y sumarle uno
+            int newIdDesafio = Integer.parseInt(lastIdStr) + 1;
+            String consulta = "INSERT INTO historial_desafios (id_historial, id_usuario, id_desafio, kilometros_realizados) VALUES (?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(consulta);
+            statement.setInt(1, newIdDesafio);
+            statement.setString(2, idUsuario);
+            statement.setString(3, id_desafio);
+            statement.setDouble(4, distanciaTotal);
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -177,6 +177,19 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         @Override
         protected Void doInBackground(String... ids) {
             String idUsuario = ids[0];
+            String consulta1 = "DELETE FROM usuarioRol WHERE id_usuario=?";
+
+            try (Connection connection = Conexion.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(consulta1)) {
+                //Cogemos el id de usuario
+                statement.setString(1, idUsuario);
+                statement.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
             String consulta = "DELETE FROM usuarios WHERE id_usuario=?";
             try (Connection connection = Conexion.getConnection();
                  PreparedStatement statement = connection.prepareStatement(consulta)) {
@@ -187,6 +200,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+
             return null;
         }
 

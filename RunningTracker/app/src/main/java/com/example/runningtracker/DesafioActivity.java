@@ -171,45 +171,63 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
                 descripcionTercerDesafio.setText("Descripción:\n" + tercerDesafio.getDescripcion());
 
 
-                if (idDesafio.equals(primerDesafio.getId_desafio())) {
-                    ObtenerNumDesafiosTask obtenerNumDesafiosTask1 = new ObtenerNumDesafiosTask();
-                    obtenerNumDesafiosTask1.execute(primerDesafio.getId_desafio());
-                } else if (idDesafio.equals(segundoDesafio.getId_desafio())) {
-                    ObtenerNumDesafiosTask obtenerNumDesafiosTask2 = new ObtenerNumDesafiosTask();
-                    obtenerNumDesafiosTask2.execute(segundoDesafio.getId_desafio());
-                } else if (idDesafio.equals(tercerDesafio.getId_desafio())) {
-                    ObtenerNumDesafiosTask obtenerNumDesafiosTask3 = new ObtenerNumDesafiosTask();
-                    obtenerNumDesafiosTask3.execute(tercerDesafio.getId_desafio());
-                }
+                // Obtener el numero de desafios por usuario
+                ObtenerNumDesafiosTask obtenerNumDesafiosTask1 = new ObtenerNumDesafiosTask(primerDesafio);
+                obtenerNumDesafiosTask1.execute(primerDesafio.getId_desafio());
+
+                ObtenerNumDesafiosTask obtenerNumDesafiosTask2 = new ObtenerNumDesafiosTask(segundoDesafio);
+                obtenerNumDesafiosTask2.execute(segundoDesafio.getId_desafio());
+
+                ObtenerNumDesafiosTask obtenerNumDesafiosTask3 = new ObtenerNumDesafiosTask(tercerDesafio);
+                obtenerNumDesafiosTask3.execute(tercerDesafio.getId_desafio());
             }
 
         }
     }
 
-    private class VerificarInscripcionTask extends AsyncTask<Void, Void, Boolean> {
-
+    private class VerificarInscripcionTask extends AsyncTask<Void, Void, List<String>> {
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            // Verificar si el usuario está inscrito en segundo plano
-            return usuarioEstaInscrito();
+        protected List<String> doInBackground(Void... voids) {
+            // Verificar la inscripción del usuario para todos los desafíos en segundo plano
+            return obtenerDesafiosInscritos();
         }
 
         @Override
-        protected void onPostExecute(Boolean inscrito) {
-            // Actualizar el texto del botón en consecuencia
-            if (inscrito) {
-                if (idDesafio.equals("1")) {
-                    // El id_desafio es igual a 1
+        protected void onPostExecute(List<String> desafiosInscritos) {
+            // Actualizar el color del texto en consecuencia
+            for (String desafioInscrito : desafiosInscritos) {
+                if (desafioInscrito.equals("1")) {
                     tituloPrimerDesafio.setTextColor(Color.GREEN);
-                } else if (idDesafio.equals("2")) {
+                } else if (desafioInscrito.equals("2")) {
                     tituloSegundoDesafio.setTextColor(Color.GREEN);
-                } else if (idDesafio.equals("3")) {
+                } else if (desafioInscrito.equals("3")) {
                     tituloTercerDesafio.setTextColor(Color.GREEN);
                 }
             }
         }
     }
+
+    private List<String> obtenerDesafiosInscritos() {
+        List<String> desafiosInscritos = new ArrayList<>();
+        try {
+            Connection connection = Conexion.getConnection();
+            String consulta = "SELECT id_desafio FROM historial_desafios WHERE id_usuario = ?";
+            PreparedStatement statement = connection.prepareStatement(consulta);
+            statement.setString(1, idUsuario);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String idDesafio = resultSet.getString("id_desafio");
+                desafiosInscritos.add(idDesafio);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return desafiosInscritos;
+    }
+
 
     //Comprueba que tiene algun desafio y si lo tiene lo pinta en verde
     private boolean usuarioEstaInscrito() {
@@ -238,7 +256,13 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
 
 
     private class ObtenerNumDesafiosTask extends AsyncTask<String, Void, Integer> {
-        @Override
+        private Desafios desafio;
+
+        // Constructor que recibe el objeto Desafios correspondiente al desafío actual
+        public ObtenerNumDesafiosTask(Desafios desafio) {
+            this.desafio = desafio;
+        }
+
         protected Integer doInBackground(String... params) {
             String idDesafio = params[0];
             int numDesafios = 0;
@@ -262,12 +286,13 @@ public class DesafioActivity extends AppCompatActivity  implements NavigationVie
         @Override
         protected void onPostExecute(Integer numDesafios) {
             // Actualizar el número de desafíos en los TextView correspondientes
-            if (idDesafio.equals(primerDesafio.getId_desafio())) {
-                tituloPrimerDesafio.setText(tituloPrimerDesafio.getText() + " (" + numDesafios + ")");
-            } else if (idDesafio.equals(segundoDesafio.getId_desafio())) {
-                tituloSegundoDesafio.setText(tituloSegundoDesafio.getText() + " (" + numDesafios + ")");
-            } else if (idDesafio.equals(tercerDesafio.getId_desafio())) {
-                tituloTercerDesafio.setText(tituloTercerDesafio.getText() + " (" + numDesafios + ")");
+            String tituloDesafio = desafio.getNombre();
+            if (desafio == primerDesafio) {
+                tituloPrimerDesafio.setText(tituloDesafio + " (" + numDesafios + ")");
+            } else if (desafio == segundoDesafio) {
+                tituloSegundoDesafio.setText(tituloDesafio + " (" + numDesafios + ")");
+            } else if (desafio == tercerDesafio) {
+                tituloTercerDesafio.setText(tituloDesafio + " (" + numDesafios + ")");
             }
         }
     }
