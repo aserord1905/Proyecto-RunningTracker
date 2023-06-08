@@ -1,6 +1,8 @@
 package com.example.runningtracker;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,16 +30,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 
-public class RegisterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class RegisterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private EditText sexoInput, pesoInput, usernameInput, passwordInput, rolInput;
     private Button btn_registro, btn_iniciosesion;
     DAO dao = new DAOImpl();
     private String nombreInstagram = "runningtracker";
-    private RadioButton radioUsuario, radioAdmin,radioHombre,radioMujer;
+    private RadioButton radioUsuario, radioAdmin, radioHombre, radioMujer;
     private String rol = "";
-    private String sexo;
-    private ImageView instagramImage,facebookImage;
+    private String sexo,peso,username,password,permiso;
+    private ImageView instagramImage, facebookImage;
+    boolean isValid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         btn_iniciosesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(i);
             }
         });
@@ -110,22 +113,22 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         btn_registro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = usernameInput.getText().toString();
-                String peso = pesoInput.getText().toString();
-                String password = passwordInput.getText().toString();
+                 username = usernameInput.getText().toString();
+                 peso = pesoInput.getText().toString();
+                 password = passwordInput.getText().toString();
 
                 // Validar que se haya seleccionado un rol
                 if (rol.isEmpty()) {
                     Snackbar.make(findViewById(R.id.layoutRegister), "Por favor, selecciona un rol", Snackbar.LENGTH_SHORT).show();
                     return;
-                }else if(sexo.equals("")){
+                } else if (sexo.equals("")) {
                     Snackbar.make(findViewById(R.id.layoutRegister), "Por favor, seleccione el sexo", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
 
                 //Llamar al metodo para validar el usuario
-                if(validarUsuario(username, password, rol, sexo, peso)) {
-                    new LoginTask().execute(sexo, peso, username, password, rol);
+                if (validarUsuario(username, password, rol, sexo, peso)) {
+                    new checkUsuario().execute(username, password, rol, sexo, peso);
                 }
             }
         });
@@ -142,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                     startActivity(intent);
                 } else {
                     // Si la aplicación de Instagram no está instalada, abrir la página de Instagram en el navegador
-                    Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/"+nombreInstagram));
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/" + nombreInstagram));
                     startActivity(webIntent);
                 }
             }
@@ -168,7 +171,6 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         });
 
 
-
     }
 
     @Override
@@ -183,10 +185,10 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
             try {
                 //sexo peso username password rol
                 sexo = strings[0];
-                String peso = strings[1];
-                String username = strings[2];
-                String password = strings[3];
-                String permiso =  strings[4];
+                 peso = strings[1];
+                 username = strings[2];
+                 password = strings[3];
+                 permiso = strings[4];
                 return dao.insertarUsuario(sexo, peso, username, password, permiso);
             } catch (Exception e) {
                 // Manejo de la excepción
@@ -194,7 +196,6 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                 return false; // O realiza alguna otra acción según tus necesidades
             }
         }
-
 
 
         @Override
@@ -210,7 +211,7 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    public boolean validarPassword(String password){
+    public boolean validarPassword(String password) {
         if (password.length() >= 6) {
             boolean tieneMayuscula = false;
             boolean tieneMinuscula = false;
@@ -229,12 +230,10 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
                 }
 
                 if (tieneMayuscula && tieneMinuscula && tieneNumero) {
-                    // La contraseña cumple con los requisitos mínimos
-                    Toast.makeText(this, "Contraseña válida", Toast.LENGTH_SHORT).show();
                     return true;
                 }
             }
-        }else
+        } else
             Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres y contener una mayúscula, una minúscula y un número", Toast.LENGTH_SHORT).show();
         // La contraseña no cumple con los requisitos mínimos
 
@@ -252,10 +251,53 @@ public class RegisterActivity extends AppCompatActivity implements NavigationVie
         } else if (!validarPassword(password)) {
             Snackbar.make(findViewById(R.id.layoutRegister), "La contraseña debe tener al menos 6 caracteres y contener una mayúscula y una minúscula", Snackbar.LENGTH_SHORT).show();
             return false;
-        }else if(!sexo.equalsIgnoreCase("mujer") && !sexo.equalsIgnoreCase("hombre")) {
+        } else if (!sexo.equalsIgnoreCase("mujer") && !sexo.equalsIgnoreCase("hombre")) {
             Snackbar.make(findViewById(R.id.layoutRegister), "El sexo debe ser hombre o mujer", Snackbar.LENGTH_SHORT).show();
         }
         return true;
     }
 
+
+    public class checkUsuario extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+             username = strings[0];
+            return checkValue(username);
+        }
+
+        public boolean checkValue(String usu) {
+            String consulta = "SELECT * FROM usuarios";
+            boolean isValid = true;
+
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection connection = Conexion.getConnection();
+                PreparedStatement statement = connection.prepareStatement(consulta);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    String usuario = resultSet.getString("username");
+
+                    // Verificar si existe el nombre de usuario en la bd
+                    if (usuario.equals(usu)) {
+                        isValid = false;
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return isValid;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean res) {
+            if (res) {
+                new LoginTask().execute(sexo, peso, username, password, rol);
+            } else {
+                Toast.makeText(RegisterActivity.this, "Error de acceso: Nombre de usuario ya existe", Toast.LENGTH_LONG).show();
+            }
+            super.onPostExecute(res);
+        }
     }
+
+}
