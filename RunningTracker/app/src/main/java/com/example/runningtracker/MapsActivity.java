@@ -338,7 +338,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     A continuación, obtenemos la lista actual de puntos de la línea mediante el método getPoints() de Polyline y añadimos el
     nuevo punto a esta lista con el método add(). Finalmente, actualizamos la lista de puntos de la línea con el método setPoints()
     de Polyline.
-    Espero que esto solucione el problema que estás experimentando. Si necesitas ayuda adicional, por favor házmelo saber.
      */
 
     //METODOS DE TRAZADO DE LÍNEAS
@@ -358,13 +357,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
+    //Metodo para detener le trazado de linea
     private void detenerTrazadoLinea() {
         trazandoLinea = false;
         mMap.setOnMyLocationChangeListener(null);
         polyline.remove();
     }
 
+    //Insertar entrenamientos una vez que finzalize la carrera
     private class InsertarEntrenamiento extends AsyncTask<String, Void, Boolean> {
         @Override
         protected Boolean doInBackground(String... strings) {
