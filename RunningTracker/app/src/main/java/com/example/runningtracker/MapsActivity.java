@@ -137,7 +137,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             startCronometro();
                         }else{
                             btnGo.setText("GO");
-                            Toast.makeText(getApplicationContext(),"Has finalizado la carrera con exito",Toast.LENGTH_LONG).show();
                             carreraenCurso=false;
                             //Llamamos al metodo para detener el trazado de linea
                             detenerTrazadoLinea();
