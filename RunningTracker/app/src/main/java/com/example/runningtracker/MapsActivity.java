@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean carreraenCurso=false;
     private String idUsuario;
     private Location lastLocation;
-    private double distanciaTotal = 12;
+    private double distanciaTotal = 0;
     private TextView cronometroTextView;
     private long tiempoInicial = 0;
     private String idDesafio;
@@ -115,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
+                //Valores en milisegundos
                 new CountDownTimer(5000, 1000) {
                     public void onTick(long segundos) {
                         //Se visualiza los segundos en el botón, tambien se puede colocar en la pantalla
@@ -139,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             carreraenCurso=false;
                             //Llamamos al metodo para detener el trazado de linea
                             detenerTrazadoLinea();
+                            //Detenemos cronometro
                             detenerCronometro();
                             //Insertar el entrenamiento cronometrado
                             InsertarEntrenamiento tareaInsertar = new InsertarEntrenamiento();
@@ -168,7 +170,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void startCronometro() {
+        //Clase que permite contar el tiempo regresivamente
         countDownTimer = new CountDownTimer(Long.MAX_VALUE, 1000) {
+            //Se llama cada vez que pasa un intervalo de tiempo 1 seg, para actualizarlo
             @Override
             public void onTick(long millisUntilFinished) {
                 tiempoInicial += 1000;
@@ -177,7 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onFinish() {
-                //Acciones pare terminar el cronometro
+                //Acciones para terminar el cronometro
             }
         };
 
@@ -247,10 +251,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 //Obtener los kilometros.
                 if (lastLocation!=null){
-                    //Obtencion en kilometros
+                    //Obtencion en kilometros, distanceTo se utiliza para calcular la distancia entre dos posiciones geográficas
+                    //Te lo da en metros, conversion a kms
                     distanciaTotal += lastLocation.distanceTo(location)/1000;
                 }
-
+                //Actualizacion constante de la posicion del usuario en el mapa
                 lastLocation = location;
             }
         };
